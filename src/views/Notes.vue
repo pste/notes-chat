@@ -1,9 +1,8 @@
 <script setup>
-import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth } from '../store/auth'
 import { notesStore } from '../store/notes'
-import { emojiStore } from '../store/emoji'
 
 import EmojiPicker from '../components/EmojiPicker.vue'
 import Note from '../components/Note.vue'
@@ -18,8 +17,7 @@ const notes = ref([])
 const newNote = ref('')
 const editingNote = ref(null)
 const isDarkMode = ref(true)
-
-const { emojis } = emojiStore
+const editInputRef = ref(null)
 
 const reversedNotes = computed(() => {
   return [...notes.value].reverse()
@@ -104,7 +102,13 @@ const toggleDarkMode = () => {
 // emoji handler
 const addEmoji = (emoji) => {
   isEmojiPickerOpen.value = false
-  newNote.value += emoji
+  //
+  const textarea = editInputRef.value
+  if (!textarea) return
+  const start = textarea.selectionStart
+  const end = textarea.selectionEnd
+  const value = textarea.value
+  newNote.value = value.substring(0, start) + emoji + value.substring(end)
 }
 </script>
 
@@ -159,18 +163,19 @@ const addEmoji = (emoji) => {
     <div class="input-area">
       <div class="note-input-wrapper">
         <textarea
-          v-model="newNote"
-          placeholder="Type a note... (Press Ctrl+Enter to send)"
-          class="note-input"
-          :rows="1"
-          @keydown.meta.enter="sendNote"
-          @keydown.ctrl.enter="sendNote"
+            ref="editInputRef"
+            v-model="newNote"
+            placeholder="Type a note... (Press Ctrl+Enter to send)"
+            class="note-input"
+            :rows="1"
+            @keydown.meta.enter="sendNote"
+            @keydown.ctrl.enter="sendNote"
         ></textarea>
         <EmojiPicker
-          v-if="isEmojiPickerOpen"
-          class="emoji-picker-wrapper"
-          @select="addEmoji"
-          @closed="isEmojiPickerOpen = false"
+            v-if="isEmojiPickerOpen"
+            class="emoji-picker-wrapper"
+            @select="addEmoji"
+            @closed="isEmojiPickerOpen = false"
         />
       </div>
       <div class="input-actions">

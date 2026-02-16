@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onUnmounted, defineProps } from 'vue'
+import EmojiPicker from './EmojiPicker.vue'
 
 const props = defineProps({
     id: {
@@ -10,6 +11,22 @@ const props = defineProps({
 })
 
 const editContent = ref(props.content)
+const isEmojiPickerOpen = ref(false)
+const editInputRef = ref(null)
+
+const addEmoji = (emoji) => {
+  const textarea = editInputRef.value
+  if (!textarea) return
+  console.log(emoji)
+
+  const start = textarea.selectionStart
+  const end = textarea.selectionEnd
+  const value = textarea.value
+  editContent.value = value.substring(0, start) + emoji + value.substring(end)
+  //textarea.value = value.substring(0, start) + emoji + value.substring(end)
+  textarea.selectionStart = textarea.selectionEnd = start + emoji.length
+  //textarea.dispatchEvent(new Event('input', { bubbles: true }))
+}
 
 onUnmounted(() => {
   editContent.value = ''
@@ -22,25 +39,25 @@ onUnmounted(() => {
         <h3>Edit Note</h3>
         <div class="edit-input-wrapper">
           <textarea
+            ref="editInputRef"
             v-model="editContent"
             class="edit-input"
             :rows="4"
           ></textarea>
-          <!--<EmojiPicker
-            v-if="editInputRef"
-            :isOpen="isEditEmojiPickerOpen"
-            :target-ref="editInputRef"
+          <EmojiPicker
+            v-if="isEmojiPickerOpen"
             class="emoji-picker-wrapper"
-            @select="addEditEmoji"
-            @closed="isEditEmojiPickerOpen = false"
+            :target-ref="editInputRef"
+            @select="addEmoji"
+            @closed="isEmojiPickerOpen = false"
           />
           <button
-            @click="isEditEmojiPickerOpen = !isEditEmojiPickerOpen"
+            @click.stop="isEmojiPickerOpen = !isEmojiPickerOpen"
             class="edit-emoji-btn"
             title="Add emoji"
           >
             😊
-          </button>-->
+          </button>
         </div>
         <div class="modal-actions">
           <button @click="$emit('close-edit')" class="cancel-btn">Cancel</button>
@@ -142,5 +159,33 @@ onUnmounted(() => {
   cursor: not-allowed;
 }
 
+.emoji-picker-wrapper {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+}
+
+.edit-emoji-btn {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  color: #333;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.edit-emoji-btn:hover {
+  background-color: #e0e0e0;
+}
 
 </style>
