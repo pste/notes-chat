@@ -1,5 +1,13 @@
 # Changes
 
+## 7467dc0 - make emoji picker a reusable component
+
+- Create useEmojiPicker composable for shared state management
+- EmojiPicker now renders at fixed center position on the screen
+- Works from both Notes page and NoteEditor dialog
+- Removed inline emoji picker from templates
+- Click outside closes the picker
+
 ## f6353d0 - improve emoji picker with nicer dialog design
 
 - Add header with "Select Emoji" title
