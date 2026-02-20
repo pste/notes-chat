@@ -63,16 +63,22 @@ onUnmounted(() => {
 
 <style scoped>
 .emoji-picker {
-  position: absolute;
-  bottom: 110%;
-  left: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  z-index: 100;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
   overflow: hidden;
-  min-width: 280px;
-  max-width: 320px;
+  width: 90%;
+  max-width: 360px;
+}
+
+.dark .emoji-picker {
+  background-color: #16213e;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 .dark .emoji-picker {
@@ -95,6 +101,7 @@ onUnmounted(() => {
   color: #666;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-align: center;
 }
 
 .dark .emoji-picker-title {
@@ -106,8 +113,8 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  gap: 0.35rem;
-  max-height: 160px;
+  gap: 0.4rem;
+  max-height: 240px;
   overflow-y: auto;
 }
 
