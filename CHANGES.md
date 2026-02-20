@@ -1,5 +1,14 @@
 # Changes
 
+## f6353d0 - improve emoji picker with nicer dialog design
+
+- Add header with "Select Emoji" title
+- Better spacing and padding
+- Gradient hover effect with subtle scale animation
+- Rounded corners and improved shadow
+- Scrollbar styling for emoji grid
+- Dark mode support for new styles
+
 ## 9a4c2ef - refactor dark mode to use .dark class with CSS files
 
 - Replace .dark-theme class with .dark class across all components
