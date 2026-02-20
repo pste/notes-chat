@@ -1,52 +1,13 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { emojiStore } from '../store/emoji'
-
-const props = defineProps({
-  targetRef: {
-    type: Object
-  }
-})
-
-const emit = defineEmits(['select', 'closed'])
+import { useEmojiPicker } from '../composables/useEmojiPicker'
 
 const { emojis } = emojiStore
-
-const pickerRef = ref(null)
-
-const selectEmoji = (emoji) => {
-  if (props.targetRef) {
-    const textarea = props.targetRef.el || props.targetRef
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const value = textarea.value
-    textarea.value = value.substring(0, start) + emoji + value.substring(end)
-    textarea.selectionStart = textarea.selectionEnd = start + emoji.length
-    textarea.dispatchEvent(new Event('input', { bubbles: true }))
-  }
-  emit('select', emoji)
-  emit('closed')
-}
-
-const handleClickOutside = (event) => {
-  if (pickerRef.value && !pickerRef.value.contains(event.target)) {
-    emit('closed')
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-  document.addEventListener('touchstart', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-  document.removeEventListener('touchstart', handleClickOutside)
-})
+const { isEmojiPickerOpen, selectEmoji, closeEmojiPicker } = useEmojiPicker()
 </script>
 
 <template>
-  <div class="emoji-picker" ref="pickerRef">
+  <div v-if="isEmojiPickerOpen" class="emoji-picker" @click.stop>
     <div class="emoji-picker-header">
       <span class="emoji-picker-title">Select Emoji</span>
     </div>
@@ -79,11 +40,6 @@ onUnmounted(() => {
 .dark .emoji-picker {
   background-color: #16213e;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.dark .emoji-picker {
-  background-color: #16213e;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
 .emoji-picker-header {

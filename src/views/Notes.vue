@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth } from '../store/auth'
 import { notesStore } from '../store/notes'
@@ -7,10 +7,10 @@ import { notesStore } from '../store/notes'
 import EmojiPicker from '../components/EmojiPicker.vue'
 import Note from '../components/Note.vue'
 import NoteEditor from '../components/NoteEditor.vue'
+import { useEmojiPicker } from '../composables/useEmojiPicker'
 
 const router = useRouter()
 const notesContainer = ref(null)
-const isEmojiPickerOpen = ref(false)
 
 const user = ref(null)
 const notes = ref([])
@@ -19,6 +19,40 @@ const editingNote = ref(null)
 // Initialize dark mode from localStorage
 const isDarkMode = ref(localStorage.getItem('theme') === 'dark')
 const editInputRef = ref(null)
+
+const { openEmojiPicker, closeEmojiPicker, isEmojiPickerOpen } = useEmojiPicker()
+
+const openEmojiPickerForNewNote = (event) => {
+  event.stopPropagation()
+  openEmojiPicker({ el: editInputRef.value }, (emoji) => {
+    // Emoji already inserted by composable
+    closeEmojiPicker()
+  })
+}
+
+const openEmojiPickerForEdit = (textareaRef) => {
+  openEmojiPicker(textareaRef, (emoji) => {
+    // Emoji already inserted by composable
+    closeEmojiPicker()
+  })
+}
+
+const handleClickOutside = (event) => {
+  if (!isEmojiPickerOpen.value) return
+  // Don't close if clicking on the emoji picker or its button
+  if (event.target.closest('.emoji-picker') || event.target.closest('.emoji-btn')) {
+    return
+  }
+  closeEmojiPicker()
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const reversedNotes = computed(() => {
   return [...notes.value].reverse()
@@ -93,18 +127,6 @@ const toggleDarkMode = () => {
     localStorage.setItem('theme', 'light')
   }
 }
-
-// emoji handler
-const addEmoji = (emoji) => {
-  isEmojiPickerOpen.value = false
-  //
-  const textarea = editInputRef.value
-  if (!textarea) return
-  const start = textarea.selectionStart
-  const end = textarea.selectionEnd
-  const value = textarea.value
-  newNote.value = value.substring(0, start) + emoji + value.substring(end)
-}
 </script>
 
 <template>
@@ -154,6 +176,9 @@ const addEmoji = (emoji) => {
       </div>
     </div>
 
+    <!-- Emoji Picker - positioned at center of screen -->
+    <EmojiPicker />
+
     <!-- Input area -->
     <div class="input-area">
       <div class="note-input-wrapper">
@@ -166,16 +191,10 @@ const addEmoji = (emoji) => {
             @keydown.meta.enter="sendNote"
             @keydown.ctrl.enter="sendNote"
         ></textarea>
-        <EmojiPicker
-            v-if="isEmojiPickerOpen"
-            class="emoji-picker-wrapper"
-            @select="addEmoji"
-            @closed="isEmojiPickerOpen = false"
-        />
       </div>
       <div class="input-actions">
         <button
-          @click.stop="isEmojiPickerOpen = !isEmojiPickerOpen"
+          @click="openEmojiPickerForNewNote"
           class="emoji-btn"
           title="Add emoji"
         >

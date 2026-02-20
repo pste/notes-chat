@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onUnmounted, defineProps } from 'vue'
-import EmojiPicker from './EmojiPicker.vue'
+import { useEmojiPicker } from '../composables/useEmojiPicker'
 
 const props = defineProps({
     id: {
@@ -11,49 +11,35 @@ const props = defineProps({
 })
 
 const editContent = ref(props.content)
-const isEmojiPickerOpen = ref(false)
 const editInputRef = ref(null)
+const { openEmojiPicker, closeEmojiPicker } = useEmojiPicker()
 
-const addEmoji = (emoji) => {
-  const textarea = editInputRef.value
-  if (!textarea) return
-  console.log(emoji)
-
-  const start = textarea.selectionStart
-  const end = textarea.selectionEnd
-  const value = textarea.value
-  editContent.value = value.substring(0, start) + emoji + value.substring(end)
-  //textarea.value = value.substring(0, start) + emoji + value.substring(end)
-  textarea.selectionStart = textarea.selectionEnd = start + emoji.length
-  //textarea.dispatchEvent(new Event('input', { bubbles: true }))
+const openEmojiPickerForEdit = (event) => {
+    event.stopPropagation()
+    openEmojiPicker({ el: editInputRef.value }, (emoji) => {
+        // Emoji already inserted by composable
+        closeEmojiPicker()
+    })
 }
 
 onUnmounted(() => {
-  editContent.value = ''
+    editContent.value = ''
 })
 </script>
 
 <template>
-    <div class="modal-overlay" >
+    <div class="modal-overlay" @click.stop>
       <div class="edit-modal">
         <h3>Edit Note</h3>
         <div class="edit-input-wrapper">
           <textarea
             ref="editInputRef"
-            v-if="isEmojiPickerOpen === false"
             v-model="editContent"
             class="edit-input"
             :rows="4"
           ></textarea>
-          <EmojiPicker
-            v-if="isEmojiPickerOpen"
-            class="emoji-picker-wrapper"
-            :target-ref="editInputRef"
-            @select="addEmoji"
-            @closed="isEmojiPickerOpen = false"
-          />
           <button
-            @click.stop="isEmojiPickerOpen = !isEmojiPickerOpen"
+            @click="openEmojiPickerForEdit"
             class="edit-emoji-btn"
             title="Add emoji"
           >
@@ -62,9 +48,9 @@ onUnmounted(() => {
         </div>
         <div class="modal-actions">
           <button @click="$emit('close-edit')" class="cancel-btn">Cancel</button>
-          <button 
-                @click="$emit('save-note', { id: id, content: editContent})" 
-                class="save-btn" 
+          <button
+                @click="$emit('save-note', { id: id, content: editContent})"
+                class="save-btn"
                 :disabled="!editContent.trim()"
             >
                 Save
@@ -195,16 +181,6 @@ onUnmounted(() => {
   background-color: #333;
 }
 
-.emoji-picker-wrapper {
-  position: absolute;
-  right: 0.5rem;
-  bottom: 0.5rem;
-}
-
-.dark .edit-emoji-btn:hover {
-  background-color: #0f3460;
-}
-
 .edit-emoji-btn {
   position: absolute;
   right: 0.5rem;
@@ -222,6 +198,10 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
+}
+
+.dark .edit-emoji-btn:hover {
+  background-color: #0f3460;
 }
 
 .edit-emoji-btn:hover {
