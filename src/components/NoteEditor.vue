@@ -40,6 +40,7 @@ onUnmounted(() => {
         <div class="edit-input-wrapper">
           <textarea
             ref="editInputRef"
+            v-if="isEmojiPickerOpen === false"
             v-model="editContent"
             class="edit-input"
             :rows="4"
@@ -88,6 +89,10 @@ onUnmounted(() => {
   animation: fadeIn 0.2s ease;
 }
 
+.dark .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
 .edit-modal {
   background-color: white;
   border-radius: 12px;
@@ -97,10 +102,18 @@ onUnmounted(() => {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
 
+.dark .edit-modal {
+  background-color: #16213e;
+}
+
 .edit-modal h3 {
   margin: 0 0 1rem 0;
   font-size: 1.25rem;
   color: #333;
+}
+
+.dark .edit-modal h3 {
+  color: #eaeaea;
 }
 
 .edit-input-wrapper {
@@ -118,6 +131,16 @@ onUnmounted(() => {
   font-family: inherit;
   line-height: 1.6;
   box-sizing: border-box;
+}
+
+.dark .edit-input {
+  background-color: #1a1a2e;
+  border-color: #0f3460;
+  color: #eaeaea;
+}
+
+.dark .edit-input:focus {
+  border-color: #4caf50;
 }
 
 .modal-actions {
@@ -145,6 +168,15 @@ onUnmounted(() => {
   background-color: #d0d0d0;
 }
 
+.dark .cancel-btn {
+  background-color: #0f3460;
+  color: #eaeaea;
+}
+
+.dark .cancel-btn:hover {
+  background-color: #1a1a2e;
+}
+
 .save-btn {
   background-color: #4caf50;
   color: white;
@@ -159,10 +191,18 @@ onUnmounted(() => {
   cursor: not-allowed;
 }
 
+.dark .save-btn:disabled {
+  background-color: #333;
+}
+
 .emoji-picker-wrapper {
   position: absolute;
   right: 0.5rem;
   bottom: 0.5rem;
+}
+
+.dark .edit-emoji-btn:hover {
+  background-color: #0f3460;
 }
 
 .edit-emoji-btn {

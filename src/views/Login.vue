@@ -71,6 +71,10 @@ onUnmounted(() => {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
+.dark .login {
+  background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+}
+
 .login-content {
   text-align: center;
   background-color: white;
@@ -78,6 +82,10 @@ onUnmounted(() => {
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.5s ease;
+}
+
+.dark .login-content {
+  background-color: #16213e;
 }
 
 @keyframes fadeIn {
@@ -96,16 +104,28 @@ onUnmounted(() => {
   color: #667eea;
 }
 
+.dark .logo {
+  color: #667eea;
+}
+
 h1 {
   margin: 0 0 0.5rem 0;
   font-size: 2rem;
   color: #333;
 }
 
+.dark h1 {
+  color: #eaeaea;
+}
+
 p {
   color: #666;
   margin-bottom: 2rem;
   font-size: 1rem;
+}
+
+.dark p {
+  color: #888;
 }
 
 :deep(.g_id_signin) {

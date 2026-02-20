@@ -43,7 +43,7 @@ const formatTime = (date) => {
 </template>
 
 <style scoped>
-.dark-theme .bubble-content {
+.dark .bubble-content {
   background-color: #16213e;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
@@ -54,7 +54,7 @@ const formatTime = (date) => {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.dark-theme .note-text {
+.dark .note-text {
   color: #eaeaea;
 }
 .note-text {
@@ -64,9 +64,10 @@ const formatTime = (date) => {
   white-space: pre-wrap;
 }
 
-.dark-theme .note-meta {
+.dark .note-meta {
   color: #eaeaea;
 }
+
 .note-meta {
   display: flex;
   align-items: center;
@@ -96,8 +97,8 @@ const formatTime = (date) => {
   align-items: center;
   justify-content: center;
 }
-.dark-theme .edit-btn,
-.dark-theme .delete-btn {
+.dark .edit-btn,
+.dark .delete-btn {
   color: #707070;
 }
 

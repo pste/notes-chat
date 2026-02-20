@@ -16,7 +16,8 @@ const user = ref(null)
 const notes = ref([])
 const newNote = ref('')
 const editingNote = ref(null)
-const isDarkMode = ref(true)
+// Initialize dark mode from localStorage
+const isDarkMode = ref(localStorage.getItem('theme') === 'dark')
 const editInputRef = ref(null)
 
 const reversedNotes = computed(() => {
@@ -85,17 +86,11 @@ const deleteNote = (id) => {
 const toggleDarkMode = () => {
   isDarkMode.value = !isDarkMode.value
   if (isDarkMode.value) {
-    document.body.style.backgroundColor = '#1a1a2e'
-    document.documentElement.style.setProperty('--bg-color', '#1a1a2e')
-    document.documentElement.style.setProperty('--text-color', '#eaeaea')
-    document.documentElement.style.setProperty('--bubble-bg', '#16213e')
-    document.documentElement.style.setProperty('--border-color', '#0f3460')
+    document.documentElement.classList.add('dark')
+    localStorage.setItem('theme', 'dark')
   } else {
-    document.body.style.backgroundColor = '#f5f7fa'
-    document.documentElement.style.setProperty('--bg-color', '#f5f7fa')
-    document.documentElement.style.setProperty('--text-color', '#213547')
-    document.documentElement.style.setProperty('--bubble-bg', '#ffffff')
-    document.documentElement.style.setProperty('--border-color', '#e0e0e0')
+    document.documentElement.classList.remove('dark')
+    localStorage.setItem('theme', 'light')
   }
 }
 
@@ -113,7 +108,7 @@ const addEmoji = (emoji) => {
 </script>
 
 <template>
-  <div class="notes-app" :class="{ 'dark-theme': isDarkMode }">
+  <div class="notes-app" :class="{ 'dark': isDarkMode }">
     <!-- Header with user info and logout -->
     <div class="notes-header">
       <div class="header-user">
@@ -224,7 +219,7 @@ const addEmoji = (emoji) => {
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-.dark-theme .notes-header {
+.dark .notes-header {
   background-color: #16213e;
   border-bottom-color: #0f3460;
 }
@@ -292,7 +287,7 @@ const addEmoji = (emoji) => {
   font-weight: 600;
   color: #333;
 }
-.dark-theme .user-name {
+.dark .user-name {
   color: #eaeaea;
 }
 
@@ -309,13 +304,6 @@ const addEmoji = (emoji) => {
 
 .logout-btn:hover {
   background-color: #ff6b81;
-}
-
-:root {
-  --bg-color: #f5f7fa;
-  --text-color: #213547;
-  --bubble-bg: #ffffff;
-  --border-color: #e0e0e0;
 }
 
 .notes-container {
@@ -465,65 +453,65 @@ const addEmoji = (emoji) => {
 
 
 
-.dark-theme .logout-btn:hover {
+.dark .logout-btn:hover {
   background-color: #ff6b81;
 }
 
-.dark-theme .notes-container {
+.dark .notes-container {
   background-color: #1a1a2e;
 }
 
-.dark-theme .empty-message {
+.dark .empty-message {
   color: #888;
 }
 
-.dark-theme .note-input {
+.dark .note-input {
   background-color: #16213e;
   border-color: #0f3460;
   color: #eaeaea;
 }
 
-.dark-theme .note-input:focus {
+.dark .note-input:focus {
   border-color: #4caf50;
 }
 
-.dark-theme .theme-btn:hover {
+.dark .theme-btn:hover {
   background-color: #0f3460;
 }
 
-.dark-theme .input-area {
+.dark .input-area {
   background-color: #16213e;
   border-top-color: #0f3460;
 }
 
-.dark-theme .edit-modal {
+.dark .edit-modal {
   background-color: #16213e;
 }
 
-.dark-theme .edit-modal h3 {
+.dark .edit-modal h3 {
   color: #eaeaea;
 }
 
-.dark-theme .edit-input {
+.dark .edit-input {
   background-color: #1a1a2e;
   border-color: #0f3460;
   color: #eaeaea;
 }
 
-.dark-theme .edit-input:focus {
+.dark .edit-input:focus {
   border-color: #4caf50;
 }
 
-.dark-theme .cancel-btn {
+.dark .cancel-btn {
   background-color: #0f3460;
   color: #eaeaea;
 }
 
-.dark-theme .cancel-btn:hover {
+.dark .cancel-btn:hover {
   background-color: #1a1a2e;
 }
 
-.dark-theme .send-btn:disabled {
+.dark .send-btn:disabled {
   background-color: #333;
 }
 

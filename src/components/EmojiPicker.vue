@@ -75,6 +75,11 @@ onUnmounted(() => {
   overflow-y: auto;
 }
 
+.dark .emoji-picker {
+  background-color: #16213e;
+  border-color: #0f3460;
+}
+
 .emoji-item {
   font-size: 1.5rem;
   cursor: pointer;
@@ -86,5 +91,9 @@ onUnmounted(() => {
 
 .emoji-item:hover {
   background-color: #f0f0f0;
+}
+
+.dark .emoji-item:hover {
+  background-color: #1f3b5e;
 }
 </style>
