@@ -4,9 +4,8 @@ defineProps({
     id: String,
     content: String,
     createdAt: Date,
+    isEdited: Boolean,
 })
-
-const isOwnNote = computed(() => true) // Since we're the only user (TODO)
 
 // utils
 const formatTime = (date) => {
@@ -20,11 +19,11 @@ const formatTime = (date) => {
 </script>
 
 <template>
-    <div class="bubble-content">
+    <div :class="{ 'bubble-content':true, 'edited-note': isEdited }">
         <p class="note-text">{{ content }}</p>
         <div class="note-meta">
           <span class="note-time">{{ formatTime(createdAt) }}</span>
-          <div v-if="isOwnNote" class="note-actions">
+          <div class="note-actions">
               <button @click="$emit('edit-note', id)" class="edit-btn" title="Edit note">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -52,6 +51,10 @@ const formatTime = (date) => {
   border-radius: 12px;
   padding: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.bubble-content.edited-note {
+  background-color: #b86e00;
 }
 
 .dark .note-text {
@@ -96,6 +99,8 @@ const formatTime = (date) => {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
 }
 .dark .edit-btn,
 .dark .delete-btn {
