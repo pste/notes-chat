@@ -287,7 +287,7 @@ const deleteNote = (id) => {
   flex-direction: column;
   height: 100vh;
   height: 100dvh;
-  background-color: #f5f7fa;
+  background-color: #d4dce8;
   font-size: 16px;
   -webkit-tap-highlight-color: transparent;
 }
@@ -301,8 +301,8 @@ const deleteNote = (id) => {
   display: flex;
   flex-direction: column;
   padding: 0.6rem 1rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: #eef1f6;
+  border-bottom: 1px solid #c2cad6;
   flex-shrink: 0;
   gap: 0.5rem;
 }
@@ -350,11 +350,11 @@ const deleteNote = (id) => {
 }
 
 .theme-btn:hover {
-  background-color: #e0e0e0;
+  background-color: #dde3eb;
 }
 
 .theme-btn.active {
-  background-color: #e8f5e9;
+  background-color: #d6edd8;
   color: #4caf50;
 }
 
@@ -395,11 +395,11 @@ const deleteNote = (id) => {
 .search-input {
   width: 100%;
   padding: 0.5rem 2rem 0.5rem 2.1rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #c2cad6;
   border-radius: 20px;
   font-size: 1rem;
   font-family: inherit;
-  background-color: #f5f7fa;
+  background-color: #dde3ec;
   color: #333;
   transition: border-color 0.2s;
 }
@@ -441,7 +441,7 @@ const deleteNote = (id) => {
 }
 
 .clear-search-btn:hover {
-  background-color: #e0e0e0;
+  background-color: #c8d0da;
 }
 
 .dark .clear-search-btn:hover {
@@ -499,8 +499,8 @@ const deleteNote = (id) => {
   flex-shrink: 0;
   padding: 0.75rem 1rem;
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
-  background-color: #ffffff;
-  border-top: 1px solid #e0e0e0;
+  background-color: #eef1f6;
+  border-top: 1px solid #c2cad6;
   gap: 0.5rem;
 }
 
@@ -571,7 +571,7 @@ const deleteNote = (id) => {
   min-height: 48px;
   max-height: 140px;
   padding: 0.7rem 2.5rem 0.7rem 1rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #c2cad6;
   border-radius: 24px;
   resize: none;
   font-size: 1rem;
@@ -622,7 +622,7 @@ const deleteNote = (id) => {
 }
 
 .clear-btn:hover {
-  background-color: #ffebee;
+  background-color: #fcd8db;
   color: #d32f2f;
 }
 
@@ -658,7 +658,7 @@ const deleteNote = (id) => {
 }
 
 .emoji-btn:hover {
-  background-color: #e0e0e0;
+  background-color: #dde3eb;
 }
 
 .dark .emoji-btn {

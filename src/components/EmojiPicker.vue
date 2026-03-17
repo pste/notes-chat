@@ -96,9 +96,9 @@ function closeKeyboard() {
   left: 0;
   right: 0;
   bottom: -100%;
-  background-color: #ffffff;
+  background-color: #eef1f6;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.18);
   z-index: 1100;
   transform: translateY(100%);
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
@@ -118,7 +118,7 @@ function closeKeyboard() {
   align-items: center;
   justify-content: space-between;
   padding: 0.6rem 1rem;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #c2cad6;
 }
 
 .dark .emoji-keyboard-header {
@@ -147,7 +147,7 @@ function closeKeyboard() {
 }
 
 .close-btn:hover {
-  background-color: #f0f0f0;
+  background-color: #d4dce8;
 }
 
 .dark .close-btn {
@@ -181,7 +181,7 @@ function closeKeyboard() {
 
 .emoji-item:hover,
 .emoji-item:active {
-  background-color: #f0f0f0;
+  background-color: #d4dce8;
 }
 
 .dark .emoji-item:hover,
