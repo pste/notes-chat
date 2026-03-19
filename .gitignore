@@ -26,3 +26,4 @@ dev-dist
 
 # Claude
 .claude/
+.impeccable.md

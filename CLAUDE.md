@@ -51,3 +51,23 @@ Every Vue SFC must follow this order: `<script setup>` → `<template>` → `<st
 ## Commit rule
 Every commit must start with `[claude]` followed by a short English summary.
 After each commit, update `CHANGES.md` with the commit id, the commit comment as subtitle, and a description of the changes.
+
+## Design Context
+
+### Users
+Uso intimo: il proprietario + poche persone vicine (famiglia, amici stretti). Contesto mobile, on-the-go — sessioni brevi (<30s), nessun onboarding. Gli utenti conoscono già l'app.
+
+### Brand Personality
+**Giocoso, caldo, informale.** Come una chat con persone care, non uno strumento di produttività. L'emoji picker è parte del carattere dell'app, non un extra.
+
+### Aesthetic Direction
+- Riferimento: Telegram / WhatsApp — bolle, feedback immediato, UI familiare
+- Anti-riferimento: Notion, Linear, dashboard enterprise — niente freddo o strutturato
+- Accent `#4caf50` verde — usarlo con decisione su azioni primarie e focus states
+
+### Design Principles
+1. **Mobile first, thumb first** — target minimi 44px, tutto raggiungibile col pollice. L'input è il cuore.
+2. **Chat-native** — bolle, timestamp discreti, feedback immediato. Se sembra strano in una chat app, ripensarlo.
+3. **Calore prima di perfezione** — bordi morbidi, ombre leggere, colori caldi. Un dettaglio giocoso vale più di un'animazione elaborata.
+4. **Scrivi subito** — la barra d'input sempre visibile, sempre pronta. Zero tap extra per iniziare a scrivere.
+5. **Intimità, non scalabilità** — pensato per 2-5 persone. Profondità di cura nei dettagli esistenti, non ampiezza di funzionalità.

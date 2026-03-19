@@ -8,6 +8,7 @@ import Note from '../components/Note.vue'
 
 const notesContainerRef = ref(null)
 const writeNoteRef = ref(null)
+const noteRefs = ref({})
 const notes = ref([])
 const categories = ref([])
 const writingNote = ref({ content: '', categoryIds: [] })
@@ -83,9 +84,14 @@ const loadCategories = () => {
 
 // triggered from emoji dialog
 function insertEmoji(selected) {
-  const textarea = writeNoteRef.value
   const emoji = selected.emoji
 
+  if (editingNoteId.value && noteRefs.value[editingNoteId.value]) {
+    noteRefs.value[editingNoteId.value].insertEmoji(emoji)
+    return
+  }
+
+  const textarea = writeNoteRef.value
   if (textarea) {
     const start = textarea.selectionStart
     const end = textarea.selectionEnd
@@ -346,6 +352,7 @@ const deleteCategory = (id) => {
 
       <div v-for="note in reversedNotes" :key="note.id" class="note-bubble">
         <Note
+            :ref="el => { if (el) noteRefs[note.id] = el; else delete noteRefs[note.id] }"
             :id="note.id"
             :content="note.content"
             :created-at="new Date(note.createdAt)"
@@ -504,6 +511,11 @@ const deleteCategory = (id) => {
 
 .theme-btn:hover {
   background-color: #dde3eb;
+}
+
+.theme-btn:focus-visible {
+  outline: 2px solid #4caf50;
+  outline-offset: 2px;
 }
 
 .theme-btn.active {
@@ -666,6 +678,11 @@ const deleteCategory = (id) => {
 
 .fchip:hover {
   background: #cdd5e0;
+}
+
+.fchip:focus-visible {
+  outline: 2px solid #4caf50;
+  outline-offset: 2px;
 }
 
 .dark .fchip {
@@ -1005,9 +1022,9 @@ const deleteCategory = (id) => {
 
 .note-input {
   width: 100%;
-  min-height: 48px;
-  max-height: 140px;
+  height: 48px;
   padding: 0.7rem 2.5rem 0.7rem 1rem;
+  overflow-y: hidden;
   border: 1px solid #c2cad6;
   border-radius: 24px;
   resize: none;
@@ -1098,6 +1115,12 @@ const deleteCategory = (id) => {
   background-color: #dde3eb;
 }
 
+.emoji-btn:focus-visible,
+.send-btn:focus-visible {
+  outline: 2px solid #4caf50;
+  outline-offset: 2px;
+}
+
 .dark .emoji-btn {
   color: #eaeaea;
 }
@@ -1147,6 +1170,30 @@ const deleteCategory = (id) => {
   .notes-header {
     padding: 0.4rem calc(50% - 380px);
   }
+
+}
+
+/* ===== LANDSCAPE MOBILE (altezza ridotta) ===== */
+@media (max-height: 480px) and (orientation: landscape) {
+  .notes-header {
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+    gap: 0.15rem;
+  }
+
+  .header-top {
+    min-height: 36px;
+  }
+
+  .input-area {
+    padding-top: 0.35rem;
+    padding-bottom: calc(0.35rem + env(safe-area-inset-bottom, 0px));
+    gap: 0.25rem;
+  }
+
+  .notes-container {
+    gap: 0.4rem;
+  }
 }
 
 /* ===== TABLET (768px–1023px) ===== */
@@ -1163,6 +1210,7 @@ const deleteCategory = (id) => {
   .notes-header {
     padding: 0.4rem 2rem;
   }
+
 }
 
 /* ===== MOBILE (≤767px) ===== */

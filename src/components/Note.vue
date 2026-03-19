@@ -36,6 +36,20 @@ const toggleEditCategory = (catId) => {
   else editCategoryIds.value.splice(idx, 1)
 }
 
+const insertEmoji = (emoji) => {
+  const ta = textareaRef.value
+  if (!ta) return
+  const start = ta.selectionStart
+  const end = ta.selectionEnd
+  editContent.value = editContent.value.substring(0, start) + emoji + editContent.value.substring(end)
+  nextTick(() => {
+    ta.selectionStart = ta.selectionEnd = start + emoji.length
+    ta.focus()
+  })
+}
+
+defineExpose({ insertEmoji })
+
 const saveEdit = () => {
   if (!editContent.value.trim()) return
   emit('save-note', { id: props.id, content: editContent.value.trim(), categoryIds: editCategoryIds.value })
@@ -232,9 +246,19 @@ const formatTime = (date) => {
   color: #1976d2;
 }
 
+.edit-btn:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
 .delete-btn:hover {
   background-color: #ffebee;
   color: #d32f2f;
+}
+
+.delete-btn:focus-visible {
+  outline: 2px solid #d32f2f;
+  outline-offset: 2px;
 }
 
 /* ===== INLINE EDIT ===== */
