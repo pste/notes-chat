@@ -11,7 +11,7 @@ const notesContainerRef = ref(null)
 const writeNoteRef = ref(null)
 const notes = ref([])
 const categories = ref([])
-const writingNote = ref({ content: '', categoryId: null })
+const writingNote = ref({ content: '', categoryIds: [] })
 
 const isEmojiKeyboardOpen = ref(false)
 const isDarkMode = ref(localStorage.getItem('theme') === 'dark')
@@ -24,7 +24,7 @@ const activeFilter = ref(null)
 const filteredNotes = computed(() => {
   let all = [...notes.value].reverse()
   if (activeFilter.value) {
-    all = all.filter(n => n.categoryId === activeFilter.value)
+    all = all.filter(n => n.categoryIds?.includes(activeFilter.value))
   }
   const q = searchQuery.value.trim().toLowerCase()
   if (!q) return all
@@ -33,9 +33,9 @@ const filteredNotes = computed(() => {
 
 const reversedNotes = computed(() => filteredNotes.value)
 
-const getCategoryForNote = (note) => {
-  if (!note.categoryId) return null
-  return categories.value.find(c => c.id === note.categoryId) || null
+const getCategoriesForNote = (note) => {
+  if (!note.categoryIds?.length) return []
+  return note.categoryIds.map(id => categories.value.find(c => c.id === id)).filter(Boolean)
 }
 
 // events
@@ -112,12 +112,12 @@ const toggleDarkMode = () => {
 const sendNote = () => {
   const id = writingNote.value?.id
   const content = writingNote.value.content.trim()
-  const categoryId = writingNote.value.categoryId || null
+  const categoryIds = writingNote.value.categoryIds || []
   if (!content) return
   if (id) {
-    notesStore.update(id, content, categoryId)
+    notesStore.update(id, content, categoryIds)
   } else {
-    notesStore.add(content, categoryId)
+    notesStore.add(content, categoryIds)
   }
   clearNote()
   loadNotes()
@@ -125,13 +125,13 @@ const sendNote = () => {
 
 // clear note
 const clearNote = () => {
-  writingNote.value = { content: '', categoryId: null }
+  writingNote.value = { content: '', categoryIds: [] }
 }
 
 // edit note
 const editNote = (id) => {
   const note = notesStore.getById(id)
-  writingNote.value = { ...note }
+  writingNote.value = { ...note, categoryIds: note.categoryIds ? [...note.categoryIds] : [] }
 }
 
 // delete note
@@ -144,7 +144,13 @@ const deleteNote = (id) => {
 
 // toggle category on current note being written
 const toggleNoteCategory = (catId) => {
-  writingNote.value.categoryId = writingNote.value.categoryId === catId ? null : catId
+  const ids = writingNote.value.categoryIds
+  const idx = ids.indexOf(catId)
+  if (idx === -1) {
+    ids.push(catId)
+  } else {
+    ids.splice(idx, 1)
+  }
 }
 
 // category management
@@ -236,7 +242,7 @@ const deleteCategory = (id) => {
             :content="note.content"
             :created-at="new Date(note.createdAt)"
             :isEdited="note.id === writingNote.id"
-            :category="getCategoryForNote(note)"
+            :categories="getCategoriesForNote(note)"
             @delete-note="deleteNote"
             @edit-note="editNote"
         />
@@ -273,7 +279,7 @@ const deleteCategory = (id) => {
           v-for="cat in categories"
           :key="cat.id"
           class="cat-select-chip"
-          :class="{ 'cat-select-active': writingNote.categoryId === cat.id }"
+          :class="{ 'cat-select-active': writingNote.categoryIds.includes(cat.id) }"
           :style="{ '--chip-color': cat.color }"
           @click="toggleNoteCategory(cat.id)"
         >

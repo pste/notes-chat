@@ -4,7 +4,7 @@ defineProps({
     content: String,
     createdAt: Date,
     isEdited: Boolean,
-    category: { type: Object, default: null },
+    categories: { type: Array, default: () => [] },
 })
 
 const formatTime = (date) => {
@@ -19,12 +19,14 @@ const formatTime = (date) => {
 
 <template>
     <div
-      :class="{ 'bubble-content': true, 'edited-note': isEdited, 'has-category': !!category }"
-      :style="category ? { '--cat-color': category.color } : {}"
+      :class="{ 'bubble-content': true, 'edited-note': isEdited, 'has-category': categories.length > 0 }"
+      :style="categories.length > 0 ? { '--cat-color': categories[0].color } : {}"
     >
-        <div v-if="category" class="category-badge">
-          <span class="cat-dot"></span>
-          <span class="cat-name">{{ category.name }}</span>
+        <div v-if="categories.length > 0" class="category-badges">
+          <span v-for="cat in categories" :key="cat.id" class="category-badge" :style="{ '--cat-color': cat.color }">
+            <span class="cat-dot"></span>
+            <span class="cat-name">{{ cat.name }}</span>
+          </span>
         </div>
         <p class="note-text">{{ content }}</p>
         <div class="note-meta">
@@ -69,11 +71,17 @@ const formatTime = (date) => {
   padding-left: calc(1rem - 3px);
 }
 
+.category-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.4rem;
+}
+
 .category-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 0.4rem;
 }
 
 .cat-dot {

@@ -10,7 +10,14 @@ function getAllNotes() {
   const data = localStorage.getItem(NOTES_KEY)
   if (!data) return []
   try {
-    return JSON.parse(data)
+    const notes = JSON.parse(data)
+    // Migrate old single categoryId → categoryIds array
+    return notes.map(n => {
+      if (!n.categoryIds) {
+        return { ...n, categoryIds: n.categoryId ? [n.categoryId] : [] }
+      }
+      return n
+    })
   } catch {
     return []
   }
@@ -26,12 +33,12 @@ export const notesStore = {
     return getAllNotes()
   },
 
-  add(content, categoryId = null) {
+  add(content, categoryIds = []) {
     const notes = getAllNotes()
     const note = {
       id: generateId(),
       content,
-      categoryId,
+      categoryIds,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -40,7 +47,7 @@ export const notesStore = {
     return note
   },
 
-  update(id, content, categoryId = null) {
+  update(id, content, categoryIds = []) {
     const notes = getAllNotes()
     const index = notes.findIndex(n => n.id === id)
     if (index === -1) return null
@@ -48,7 +55,7 @@ export const notesStore = {
     notes[index] = {
       ...notes[index],
       content,
-      categoryId,
+      categoryIds,
       updatedAt: new Date().toISOString()
     }
     saveNotes(notes)
