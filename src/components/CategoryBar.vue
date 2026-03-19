@@ -124,7 +124,6 @@ const confirmAdd = () => {
 .chip-wrapper {
   display: flex;
   align-items: center;
-  position: relative;
 }
 
 .chip {
@@ -198,9 +197,6 @@ const confirmAdd = () => {
 }
 
 .chip-del {
-  position: absolute;
-  top: -6px;
-  right: -6px;
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -214,6 +210,8 @@ const confirmAdd = () => {
   align-items: center;
   justify-content: center;
   padding: 0;
+  flex-shrink: 0;
+  margin-left: -6px;
   opacity: 0;
   transition: opacity 0.15s, background-color 0.15s;
 }
