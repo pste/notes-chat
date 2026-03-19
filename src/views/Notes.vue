@@ -1,26 +1,31 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, onUnmounted } from 'vue'
 import { notesStore } from '../store/notes'
+import { categoriesStore } from '../store/categories'
 
 import EmojiPicker from '../components/EmojiPicker.vue'
 import Note from '../components/Note.vue'
-const notesContainerRef = ref(null)
+import CategoryBar from '../components/CategoryBar.vue'
 
+const notesContainerRef = ref(null)
 const writeNoteRef = ref(null)
 const notes = ref([])
-const writingNote = ref({
-  content: ''
-})
+const categories = ref([])
+const writingNote = ref({ content: '', categoryId: null })
 
 const isEmojiKeyboardOpen = ref(false)
 const isDarkMode = ref(localStorage.getItem('theme') === 'dark')
 const searchQuery = ref('')
 const isSearchOpen = ref(false)
 const searchInputRef = ref(null)
+const activeFilter = ref(null)
 
 // computed
 const filteredNotes = computed(() => {
-  const all = [...notes.value].reverse()
+  let all = [...notes.value].reverse()
+  if (activeFilter.value) {
+    all = all.filter(n => n.categoryId === activeFilter.value)
+  }
   const q = searchQuery.value.trim().toLowerCase()
   if (!q) return all
   return all.filter(n => n.content.toLowerCase().includes(q))
@@ -28,10 +33,14 @@ const filteredNotes = computed(() => {
 
 const reversedNotes = computed(() => filteredNotes.value)
 
+const getCategoryForNote = (note) => {
+  if (!note.categoryId) return null
+  return categories.value.find(c => c.id === note.categoryId) || null
+}
+
 // events
 const handleClickOutside = (event) => {
   if (!isEmojiKeyboardOpen.value) return
-  // Don't close if clicking on the emoji keyboard or its button
   if (event.target.closest('.emoji-keyboard') || event.target.closest('.emoji-btn')) {
     return
   }
@@ -45,16 +54,20 @@ onUnmounted(() => {
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
   loadNotes()
+  loadCategories()
 })
 
 const loadNotes = () => {
   notes.value = notesStore.getAll()
   nextTick(() => {
-    // scroll to bottom
     if (notesContainerRef.value) {
       notesContainerRef.value.scrollTop = notesContainerRef.value.scrollHeight
     }
   })
+}
+
+const loadCategories = () => {
+  categories.value = categoriesStore.getAll()
 }
 
 // triggered from emoji dialog
@@ -67,13 +80,8 @@ function insertEmoji(selected) {
     const end = textarea.selectionEnd
     const value = textarea.value
 
-    // Update the textarea value with the emoji
     textarea.value = value.substring(0, start) + emoji + value.substring(end)
-
-    // Update cursor position
     textarea.selectionStart = textarea.selectionEnd = start + emoji.length
-
-    // Trigger input event
     textarea.dispatchEvent(new Event('input', { bubbles: true }))
   }
 }
@@ -104,28 +112,26 @@ const toggleDarkMode = () => {
 const sendNote = () => {
   const id = writingNote.value?.id
   const content = writingNote.value.content.trim()
-  if (!content.trim()) return
-  // edit or save new
+  const categoryId = writingNote.value.categoryId || null
+  if (!content) return
   if (id) {
-    notesStore.update(id, content)
+    notesStore.update(id, content, categoryId)
+  } else {
+    notesStore.add(content, categoryId)
   }
-  else {
-    notesStore.add(content)
-  }
-  // reset
   clearNote()
   loadNotes()
 }
 
 // clear note
 const clearNote = () => {
-  writingNote.value = { content: '' }
+  writingNote.value = { content: '', categoryId: null }
 }
 
 // edit note
 const editNote = (id) => {
   const note = notesStore.getById(id)
-  writingNote.value = note
+  writingNote.value = { ...note }
 }
 
 // delete note
@@ -134,6 +140,23 @@ const deleteNote = (id) => {
     notesStore.delete(id)
     loadNotes()
   }
+}
+
+// toggle category on current note being written
+const toggleNoteCategory = (catId) => {
+  writingNote.value.categoryId = writingNote.value.categoryId === catId ? null : catId
+}
+
+// category management
+const addCategory = ({ name, color }) => {
+  categoriesStore.add(name, color)
+  loadCategories()
+}
+
+const deleteCategory = (id) => {
+  if (activeFilter.value === id) activeFilter.value = null
+  categoriesStore.delete(id)
+  loadCategories()
 }
 </script>
 
@@ -192,22 +215,31 @@ const deleteNote = (id) => {
       </div>
     </div>
 
+    <!-- Category filter bar -->
+    <CategoryBar
+      :categories="categories"
+      :active-filter="activeFilter"
+      @update:active-filter="activeFilter = $event"
+      @add-category="addCategory"
+      @delete-category="deleteCategory"
+    />
+
     <!-- Notes list (chat-style) -->
     <div class="notes-container" ref="notesContainerRef">
       <div v-if="reversedNotes.length === 0" class="empty-state">
-        <p class="empty-message">{{ searchQuery ? 'No notes match your search.' : 'No notes yet. Start the conversation!' }}</p>
+        <p class="empty-message">{{ searchQuery ? 'No notes match your search.' : activeFilter ? 'No notes in this category.' : 'No notes yet. Start the conversation!' }}</p>
       </div>
 
       <div v-for="note in reversedNotes" :key="note.id" class="note-bubble">
-        <Note 
-            :id="note.id" 
-            :content="note.content" 
-            :created-at="new Date(note.createdAt)" 
+        <Note
+            :id="note.id"
+            :content="note.content"
+            :created-at="new Date(note.createdAt)"
             :isEdited="note.id === writingNote.id"
+            :category="getCategoryForNote(note)"
             @delete-note="deleteNote"
             @edit-note="editNote"
-        >
-        </Note>
+        />
       </div>
     </div>
 
@@ -234,6 +266,22 @@ const deleteNote = (id) => {
           Cancel
         </button>
       </div>
+
+      <!-- Category selector -->
+      <div v-if="categories.length > 0" class="category-selector">
+        <button
+          v-for="cat in categories"
+          :key="cat.id"
+          class="cat-select-chip"
+          :class="{ 'cat-select-active': writingNote.categoryId === cat.id }"
+          :style="{ '--chip-color': cat.color }"
+          @click="toggleNoteCategory(cat.id)"
+        >
+          <span class="cat-chip-dot"></span>
+          {{ cat.name }}
+        </button>
+      </div>
+
       <div class="input-row">
         <div class="note-input-wrapper">
           <textarea
@@ -553,6 +601,68 @@ const deleteNote = (id) => {
   background-color: rgba(245, 166, 35, 0.1);
 }
 
+/* ===== CATEGORY SELECTOR ===== */
+.category-selector {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-selector::-webkit-scrollbar {
+  display: none;
+}
+
+.cat-select-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 12px;
+  border: 1px solid #c2cad6;
+  background: transparent;
+  color: #666;
+  font-size: 0.75rem;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+
+.cat-select-chip:hover {
+  background: #dde3ec;
+}
+
+.cat-chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--chip-color);
+  flex-shrink: 0;
+}
+
+.cat-select-active {
+  background: var(--chip-color);
+  border-color: var(--chip-color);
+  color: white;
+}
+
+.cat-select-active .cat-chip-dot {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.dark .cat-select-chip {
+  border-color: #1a2a4a;
+  color: #888;
+}
+
+.dark .cat-select-chip:hover {
+  background: #16213e;
+}
+
+/* ===== INPUT ROW ===== */
 .input-row {
   display: flex;
   align-items: flex-end;

@@ -1,13 +1,12 @@
 <script setup>
-import { ref, computed, defineProps } from 'vue'
 defineProps({
     id: String,
     content: String,
     createdAt: Date,
     isEdited: Boolean,
+    category: { type: Object, default: null },
 })
 
-// utils
 const formatTime = (date) => {
   return date.toLocaleString('en-US', {
     month: 'short',
@@ -19,7 +18,14 @@ const formatTime = (date) => {
 </script>
 
 <template>
-    <div :class="{ 'bubble-content':true, 'edited-note': isEdited }">
+    <div
+      :class="{ 'bubble-content': true, 'edited-note': isEdited, 'has-category': !!category }"
+      :style="category ? { '--cat-color': category.color } : {}"
+    >
+        <div v-if="category" class="category-badge">
+          <span class="cat-dot"></span>
+          <span class="cat-name">{{ category.name }}</span>
+        </div>
         <p class="note-text">{{ content }}</p>
         <div class="note-meta">
           <span class="note-time">{{ formatTime(createdAt) }}</span>
@@ -46,6 +52,7 @@ const formatTime = (date) => {
   background-color: #16213e;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
+
 .bubble-content {
   background-color: #ffffff;
   border-radius: 12px;
@@ -57,9 +64,39 @@ const formatTime = (date) => {
   background-color: #b86e00;
 }
 
+.has-category {
+  border-left: 3px solid var(--cat-color);
+  padding-left: calc(1rem - 3px);
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 0.4rem;
+}
+
+.cat-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cat-color);
+  flex-shrink: 0;
+}
+
+.cat-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--cat-color);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .dark .note-text {
   color: #eaeaea;
 }
+
 .note-text {
   margin: 0 0 0.5rem 0;
   line-height: 1.6;
@@ -102,6 +139,7 @@ const formatTime = (date) => {
   min-width: 44px;
   min-height: 44px;
 }
+
 .dark .edit-btn,
 .dark .delete-btn {
   color: #707070;

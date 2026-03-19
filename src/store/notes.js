@@ -26,11 +26,12 @@ export const notesStore = {
     return getAllNotes()
   },
 
-  add(content) {
+  add(content, categoryId = null) {
     const notes = getAllNotes()
     const note = {
       id: generateId(),
       content,
+      categoryId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -39,7 +40,7 @@ export const notesStore = {
     return note
   },
 
-  update(id, content) {
+  update(id, content, categoryId = null) {
     const notes = getAllNotes()
     const index = notes.findIndex(n => n.id === id)
     if (index === -1) return null
@@ -47,6 +48,7 @@ export const notesStore = {
     notes[index] = {
       ...notes[index],
       content,
+      categoryId,
       updatedAt: new Date().toISOString()
     }
     saveNotes(notes)
