@@ -1,5 +1,13 @@
 # CHANGES
 
+## e16108f — fix PWA installability: meta tags, icon purposes, remove conflicting public files
+
+**Root `index.html`**: aggiornato con tutti i meta tag necessari — `theme-color: #4caf50`, meta iOS (`apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style: black-translucent`, `apple-mobile-web-app-title`), `apple-touch-icon`. Il viewport ora include `maximum-scale=1.0, user-scalable=no`. Il titolo è allineato a "Notes Chat".
+
+**`vite.config.js`**: `theme_color` e `background_color` aggiornati a `#4caf50`. Gli icon entries ora hanno purpose separati: 4 entry totali (`any` + `maskable` per 192px e 512px) — Chrome richiede almeno un'entry con `purpose: 'any'`; il valore combinato `'any maskable'` non era riconosciuto correttamente.
+
+**File conflittuali rimossi**: `public/index.html` e `public/manifest.json` eliminati — venivano copiati nella cartella `dist/` sovrascrivendo i file generati da `vite-plugin-pwa`. Il plugin genera autonomamente `manifest.webmanifest` e inietta il link nel `dist/index.html`.
+
 ## 4d3ee04 — fix input bar, emoji in edit mode, keyboard nav, landscape layout
 
 **Input bar (mobile)**: `min-height`/`max-height` sostituiti con `height: 48px` fisso e `overflow-y: hidden` — la barra di scrittura appare sempre come linea singola senza scrollbar.
