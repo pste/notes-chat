@@ -20,8 +20,8 @@ export default defineConfig({
         name: 'Notes Chat',
         short_name: 'Notes',
         description: 'A mobile-friendly notes chat application',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        theme_color: '#4caf50',
+        background_color: '#4caf50',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',
@@ -31,13 +31,25 @@ export default defineConfig({
             src: 'pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable'
           },
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       }
