@@ -1,5 +1,17 @@
 # CHANGES
 
+## 4d3ee04 — fix input bar, emoji in edit mode, keyboard nav, landscape layout
+
+**Input bar (mobile)**: `min-height`/`max-height` sostituiti con `height: 48px` fisso e `overflow-y: hidden` — la barra di scrittura appare sempre come linea singola senza scrollbar.
+
+**Emoji in edit mode**: l'emoji picker ora inserisce nel textarea della nota in editing (non nella barra principale). `Note.vue` espone `insertEmoji(emoji)` via `defineExpose`. `Notes.vue` mantiene un dizionario `noteRefs` (ref per component) e reindirizza l'inserimento quando `editingNoteId` è attivo.
+
+**Keyboard navigation**: aggiunto `focus-visible` con `outline: 2px solid` su tutti i controlli interattivi — `.theme-btn`, `.fchip`, `.emoji-btn`, `.send-btn` (verde `#4caf50`), `.edit-btn` (blu `#1976d2`), `.delete-btn` (rosso `#d32f2f`). Visibile solo con navigazione da tastiera (non su click/touch).
+
+**Landscape mobile**: nuova media query `@media (max-height: 480px) and (orientation: landscape)` — riduce padding di header e input area, abbassa `min-height` dell'header a 36px per recuperare spazio verticale sul telefono in orizzontale.
+
+**Design context**: aggiunto `## Design Context` a `CLAUDE.md` e creato `.impeccable.md` con profilo utenti, personalità del brand, riferimenti estetici e 5 principi di design (mobile-first, chat-native, calore, scrivi subito, intimità).
+
 ## d61c0c8 — move search and category filter into header, remove CategoryBar
 
 Consolidates all controls into the header to save vertical space.
