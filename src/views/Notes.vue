@@ -19,6 +19,7 @@ const searchQuery = ref('')
 const isSearchOpen = ref(false)
 const searchInputRef = ref(null)
 const activeFilter = ref(null)
+const editingNoteId = ref(null)
 
 // computed
 const filteredNotes = computed(() => {
@@ -108,30 +109,36 @@ const toggleDarkMode = () => {
   }
 }
 
-// save note
+// save new note
 const sendNote = () => {
-  const id = writingNote.value?.id
   const content = writingNote.value.content.trim()
   const categoryIds = writingNote.value.categoryIds || []
   if (!content) return
-  if (id) {
-    notesStore.update(id, content, categoryIds)
-  } else {
-    notesStore.add(content, categoryIds)
-  }
+  notesStore.add(content, categoryIds)
   clearNote()
   loadNotes()
 }
 
-// clear note
+// clear new note input
 const clearNote = () => {
   writingNote.value = { content: '', categoryIds: [] }
 }
 
-// edit note
+// start inline edit
 const editNote = (id) => {
-  const note = notesStore.getById(id)
-  writingNote.value = { ...note, categoryIds: note.categoryIds ? [...note.categoryIds] : [] }
+  editingNoteId.value = id
+}
+
+// save inline edit
+const handleSaveNote = ({ id, content, categoryIds }) => {
+  notesStore.update(id, content, categoryIds)
+  editingNoteId.value = null
+  loadNotes()
+}
+
+// cancel inline edit
+const handleCancelEdit = () => {
+  editingNoteId.value = null
 }
 
 // delete note
@@ -241,10 +248,13 @@ const deleteCategory = (id) => {
             :id="note.id"
             :content="note.content"
             :created-at="new Date(note.createdAt)"
-            :isEdited="note.id === writingNote.id"
+            :is-editing="note.id === editingNoteId"
             :categories="getCategoriesForNote(note)"
+            :all-categories="categories"
             @delete-note="deleteNote"
             @edit-note="editNote"
+            @save-note="handleSaveNote"
+            @cancel-edit="handleCancelEdit"
         />
       </div>
     </div>
@@ -258,21 +268,6 @@ const deleteCategory = (id) => {
 
     <!-- Input area -->
     <div class="input-area">
-      <div v-if="writingNote.id" class="edit-banner">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
-        <span>Editing note</span>
-        <button class="cancel-edit-btn" @click="clearNote" title="Cancel edit (Esc)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-          Cancel
-        </button>
-      </div>
-
       <!-- Category selector -->
       <div v-if="categories.length > 0" class="category-selector">
         <button
@@ -561,50 +556,6 @@ const deleteCategory = (id) => {
 .dark .input-area {
   background-color: #0f3460;
   border-top-color: #16213e;
-}
-
-.edit-banner {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
-  color: #b86e00;
-  padding: 0.2rem 0;
-}
-
-.dark .edit-banner {
-  color: #f5a623;
-}
-
-.edit-banner span {
-  flex: 1;
-}
-
-.cancel-edit-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  background: none;
-  border: 1px solid currentColor;
-  border-radius: 12px;
-  padding: 0.2rem 0.6rem;
-  font-size: 0.75rem;
-  color: #b86e00;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  line-height: 1.4;
-}
-
-.cancel-edit-btn:hover {
-  background-color: #fff3e0;
-}
-
-.dark .cancel-edit-btn {
-  color: #f5a623;
-}
-
-.dark .cancel-edit-btn:hover {
-  background-color: rgba(245, 166, 35, 0.1);
 }
 
 /* ===== CATEGORY SELECTOR ===== */
