@@ -1,5 +1,32 @@
 # CHANGES
 
+## d61c0c8 — move search and category filter into header, remove CategoryBar
+
+Consolidates all controls into the header to save vertical space.
+
+**Search**: clicking the search icon now replaces the title inline (same row) with a compact pill-shaped input. No second row is added. Result count appears as a small badge inside the pill. Pressing Esc or the × button closes it.
+
+**Category filter**: a new funnel icon button in the header toggles a collapsible panel that expands below the header-top row. The panel contains "All" + category chips (with inline delete buttons) + a "+" button that opens a compact add-category form (name input + color swatches). The filter button shows a green dot when a filter is active. Clicking outside closes the panel.
+
+**CategoryBar component**: no longer used (file kept, import removed from Notes.vue). All category management (add, delete, filter) is now handled inside the header panel.
+
+## 7bc7d59 — inline editing: edit notes in place instead of input area
+
+Clicking the edit button now transforms the note bubble itself into an editable form, instead of sending the content to the bottom input area.
+
+**Modified files:**
+- `src/components/Note.vue` — component is now slightly stateful during edit mode. New props: `isEditing` (bool), `allCategories` (array). When `isEditing` is true shows: a `<textarea>` pre-filled with the note content (auto-focused, cursor at end), a category chip selector, and Save/Cancel buttons. Emits `save-note` with `{ id, content, categoryIds }` and `cancel-edit`. Ctrl/Cmd+Enter saves, Esc cancels. The note bubble gets a green ring (`box-shadow: 0 0 0 2px #4caf50`) while editing.
+- `src/views/Notes.vue` — removed edit state from `writingNote`. Added `editingNoteId` ref. `editNote(id)` now just sets `editingNoteId`. Added `handleSaveNote` and `handleCancelEdit`. Removed edit-banner from the input area and its CSS.
+
+## 80955c2 — support multiple categories per note
+
+Each note can now have multiple categories assigned simultaneously.
+
+**Modified files:**
+- `src/store/notes.js` — `categoryId` (single) replaced by `categoryIds` (array). `add()` and `update()` now accept `categoryIds = []`. `getAllNotes()` automatically migrates old notes with `categoryId` to the new format on read.
+- `src/views/Notes.vue` — `writingNote` uses `categoryIds: []` instead of `categoryId`. `toggleNoteCategory` adds/removes category IDs from the array. `getCategoriesForNote()` returns an array of category objects. Filter logic updated to use `categoryIds.includes()`.
+- `src/components/Note.vue` — `category` prop replaced by `categories` (array). Shows one badge per assigned category. Border color uses the first category's color.
+
 ## a5c351a — add category labels with filter bar and note badge
 
 Added a full category/label system for notes.
