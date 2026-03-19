@@ -38,8 +38,6 @@ const filteredNotes = computed(() => {
   return all.filter(n => n.content.toLowerCase().includes(q))
 })
 
-const reversedNotes = computed(() => filteredNotes.value)
-
 const getCategoriesForNote = (note) => {
   if (!note.categoryIds?.length) return []
   return note.categoryIds.map(id => categories.value.find(c => c.id === id)).filter(Boolean)
@@ -346,11 +344,11 @@ const deleteCategory = (id) => {
 
     <!-- Notes list (chat-style) -->
     <div class="notes-container" ref="notesContainerRef">
-      <div v-if="reversedNotes.length === 0" class="empty-state">
+      <div v-if="filteredNotes.length === 0" class="empty-state">
         <p class="empty-message">{{ searchQuery ? 'No notes match your search.' : activeFilter ? 'No notes in this category.' : 'No notes yet. Start the conversation!' }}</p>
       </div>
 
-      <div v-for="note in reversedNotes" :key="note.id" class="note-bubble">
+      <div v-for="note in filteredNotes" :key="note.id" class="note-bubble">
         <Note
             :ref="el => { if (el) noteRefs[note.id] = el; else delete noteRefs[note.id] }"
             :id="note.id"
