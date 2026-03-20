@@ -1,5 +1,9 @@
 # CHANGES
 
+## a940c6e — update PWA icons from notes-chat-1.png, change theme color to #6502e7
+
+Sostituisce le icone PWA con quelle derivate da `public/notes-chat-1.png` (cervello su carta a righe). Il colore viola scuro originale `#1e0f2f` è stato sostituito con `#6502e7` prima del resize. Aggiornati `theme_color` e `background_color` nel manifest da `#581C87` a `#6502e7`.
+
 ## a14f02b — always show category chips in header, remove filter toggle
 
 I chip delle categorie e il filtro "All" sono ora sempre visibili nell'header, senza necessità di premere un pulsante per mostrarli. Rimosso il pulsante filtro (icona imbuto), lo stato `isFilterOpen`, e la logica click-outside correlata. Il pulsante `+` apre/chiude il form di aggiunta categoria direttamente. Fix del bug che impediva la creazione di nuove categorie (il click-outside cercava `.filter-panel` che non esisteva più nel DOM).
