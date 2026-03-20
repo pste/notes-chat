@@ -1,5 +1,13 @@
 # CHANGES
 
+## 7969a32 — new icon: dark purple brain-balloon, update theme color
+
+Sostituisce il logo verde (chat balloon semplice) con un brain-balloon viola scuro.
+
+**Design dell'icona** (`scripts/icon.svg`): due cerchi bianchi sovrapposti simulano i due emisferi cerebrali — la zona di background viola che si vede tra i cerchi in cima forma naturalmente la "valle" del corpo calloso. Sotto, un rettangolo arrotondato forma il corpo del balloon; in basso-sinistra una coda triangolare identifica la forma come fumetto chat. All'interno: tre righe viola di larghezza variabile (stile messaggi chat). Sfondo: quadrato viola scuro `#581C87` con angoli arrotondati.
+
+**Colori aggiornati**: `theme_color` e `background_color` nel manifest (`vite.config.js`) e `theme-color` nel meta tag di `index.html` aggiornati da `#4caf50` (verde) a `#581C87` (viola scuro).
+
 ## 08c8f17 — refactor header: inline filter chips, fix scoped CSS inheritance
 
 **Filter chips inline**: i filter chips sono stati spostati dentro `header-top` come terzo elemento flex, eliminando la riga separata. I chips scorrono orizzontalmente (`overflow-x: auto`, scrollbar nascosta) quando le categorie sono molte. L'header rimane sempre a singola riga (44px).
