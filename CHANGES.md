@@ -1,5 +1,17 @@
 # CHANGES
 
+## 08c8f17 — refactor header: inline filter chips, fix scoped CSS inheritance
+
+**Filter chips inline**: i filter chips sono stati spostati dentro `header-top` come terzo elemento flex, eliminando la riga separata. I chips scorrono orizzontalmente (`overflow-x: auto`, scrollbar nascosta) quando le categorie sono molte. L'header rimane sempre a singola riga (44px).
+
+**Search + filter coesistono**: quando entrambi sono aperti, la search si restringe a 140px fissi tramite `:has(.filter-chips)`, lasciando spazio ai chips. Quando solo la search è aperta, torna `flex: 1`.
+
+**Add-category form**: compare come seconda riga dentro `.notes-header` solo quando si sta effettivamente aggiungendo una categoria — non più come parte del panel sempre visibile.
+
+**CSS scoped fix**: le classi `.notes-title`, `.notes-header`, `.header-top` e relative media query responsive (desktop/tablet/landscape) sono state spostate in `Header.vue`. In `Notes.vue` erano irraggiungibili perché il CSS scoped non penetra nei componenti figlio. Rimossi i CSS duplicati/morti da `Notes.vue`.
+
+**CLAUDE.md**: aggiornata la sezione Architecture con la struttura attuale (Pinia + composable `useLocalStorage`, store `filter.js` e `theme.js`, ruolo di `Header.vue`).
+
 ## e16108f — fix PWA installability: meta tags, icon purposes, remove conflicting public files
 
 **Root `index.html`**: aggiornato con tutti i meta tag necessari — `theme-color: #4caf50`, meta iOS (`apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style: black-translucent`, `apple-mobile-web-app-title`), `apple-touch-icon`. Il viewport ora include `maximum-scale=1.0, user-scalable=no`. Il titolo è allineato a "Notes Chat".
