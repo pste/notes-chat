@@ -258,19 +258,6 @@ const toggleNoteCategory = (catId) => {
   background-color: #1a1a2e;
 }
 
-.notes-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-  flex-shrink: 0;
-}
-
-.dark .notes-title {
-  color: #eaeaea;
-}
-
-
-
 
 
 
@@ -551,24 +538,11 @@ const toggleNoteCategory = (catId) => {
     padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   }
 
-  .notes-header {
-    padding: 0.4rem calc(50% - 380px);
-  }
 
 }
 
 /* ===== LANDSCAPE MOBILE (altezza ridotta) ===== */
 @media (max-height: 480px) and (orientation: landscape) {
-  .notes-header {
-    padding-top: 0.15rem;
-    padding-bottom: 0.15rem;
-    gap: 0.15rem;
-  }
-
-  .header-top {
-    min-height: 36px;
-  }
-
   .input-area {
     padding-top: 0.35rem;
     padding-bottom: calc(0.35rem + env(safe-area-inset-bottom, 0px));
@@ -591,9 +565,6 @@ const toggleNoteCategory = (catId) => {
     padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   }
 
-  .notes-header {
-    padding: 0.4rem 2rem;
-  }
 
 }
 

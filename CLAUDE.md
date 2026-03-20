@@ -20,20 +20,26 @@ The dev server is always running on http://localhost:8080. There's no need to la
 **PWA chat-style notes app** — no login, no backend. All state is in localStorage. Built with Vue 3 + Vite + vite-plugin-pwa.
 
 ### Data flow
-- `src/store/notes.js` — plain JS store (not Pinia) wrapping localStorage under key `notes_chat_notes`. Exposes `getAll()`, `add()`, `update()`, `delete()`, `getById()`.
+All stores use **Pinia** (composition API) with a custom `useLocalStorage` composable (`src/composables/localStorage.js`) for automatic 2-way localStorage sync with multi-tab support.
+
+- `src/store/notes.js` — note CRUD, localStorage key `notes_chat_notes`. Exposes `getAll()`, `add()`, `update()`, `delete()`, `getById()`. `getAll()` migrates legacy `categoryId` → `categoryIds[]` on read.
+- `src/store/categories.js` — category CRUD, localStorage key `notes_chat_categories`. Exports `CATEGORY_COLORS` palette (12 colors).
+- `src/store/filter.js` — non-persistent filter/search state: `category`, `searchQuery`, `isFilterOpen`.
+- `src/store/theme.js` — dark mode, localStorage key `notes_chat_theme`. Exposes `toggle()`. Applies `.dark` class to `<html>` on init and on change.
 - `src/store/emoji.js` — static emoji list, no persistence.
-- Pinia is installed but unused — all stores are custom plain JS modules.
+- `src/composables/localStorage.js` — `useLocalStorage(key, default)` returns a ref that auto-persists and syncs across tabs via `storage` events.
 
 ### Routing
 `/` and `/notes` both render `Notes.vue`. No auth guards, no login route. Unknown paths redirect to `/`.
 
 ### Component responsibilities
-- `Notes.vue` — owns all app state: note list, edit mode, emoji picker visibility, search, dark mode. Handles keyboard shortcuts (Ctrl/Cmd+Enter to send, Esc to cancel edit).
-- `Note.vue` — stateless display bubble. Emits `edit-note` and `delete-note` upward.
+- `Notes.vue` — owns note list, edit mode, emoji picker visibility. Handles keyboard shortcuts (Ctrl/Cmd+Enter to send, Esc to cancel edit). Reads `filterStore` for filtered note list.
+- `Header.vue` — search (inline pill replacing the title), filter chips (inline in the header row, horizontally scrollable), dark mode toggle. Manages add-category form. Uses `filterStore`, `categoriesStore`, `themeStore`.
+- `Note.vue` — stateless display bubble. Switches to inline edit mode via `isEditing` prop. Emits `edit-note`, `delete-note`, `save-note`, `cancel-edit`. Exposes `insertEmoji(emoji)`.
 - `EmojiPicker.vue` — fixed-position bottom sheet. Uses the Visual Viewport API (`window.visualViewport`) to stay above the software keyboard on mobile. Emits `select-emoji` with `{ emoji }`.
 
 ### Dark mode
-Toggled by adding/removing `.dark` on `<html>`. Initialized from localStorage key `theme` in `src/main.js`. All dark styles use `.dark .selector` within scoped `<style>` blocks — no CSS variables.
+Managed by `src/store/theme.js`. Toggled by adding/removing `.dark` on `<html>`. All dark styles use `.dark .selector` within scoped `<style>` blocks — no CSS variables.
 
 ### PWA
 Configured in `vite.config.js` via `vite-plugin-pwa` with `registerType: 'autoUpdate'`. Manifest and icons are in `public/`.

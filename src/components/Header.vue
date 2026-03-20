@@ -66,142 +66,151 @@ const confirmAddCategory = () => {
 </script>
 
 <template>
-    <div class="notes-header">
-        <div class="header-top">
-            <!-- Title or inline search -->
-            <span v-if="!isSearchOpen" class="notes-title">Notes</span>
-            <div v-else class="search-inline-wrapper">
-            <svg class="search-inline-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input
-                ref="searchInputRef"
-                v-model="filterStore.searchQuery"
-                class="search-inline-input"
-                placeholder="Search notes..."
-                @keydown.esc="toggleSearch"
-            />
-            <button v-if="filterStore.searchQuery" class="search-clear-btn" @click="filterStore.searchQuery = ''">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-            <span v-if="filterStore.searchQuery" class="search-count-inline">{{ filteredNotes.length }}</span>
-        </div>
+  <div class="notes-header">
+    <div class="header-top">
+      <!-- Title or inline search -->
+      <span v-if="!isSearchOpen" class="notes-title">Notes</span>
+      <div v-else class="search-inline-wrapper">
+        <svg class="search-inline-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          ref="searchInputRef"
+          v-model="filterStore.searchQuery"
+          class="search-inline-input"
+          placeholder="Search notes..."
+          @keydown.esc="toggleSearch"
+        />
+        <button v-if="filterStore.searchQuery" class="search-clear-btn" @click="filterStore.searchQuery = ''">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <span v-if="filterStore.searchQuery" class="search-count-inline">{{ filteredNotes.length }}</span>
+      </div>
 
-        <div class="header-btns">
-          <!-- Search toggle -->
-          <button @click="toggleSearch" class="theme-btn" :class="{ active: isSearchOpen }" title="Search notes">
-            <svg v-if="!isSearchOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+      <!-- Filter chips inline -->
+      <div v-if="filterStore.isFilterOpen" class="filter-chips">
+        <button
+          class="fchip"
+          :class="{ 'fchip-active': !filterStore.category }"
+          @click="filterStore.category = null"
+        >All</button>
 
-          <!-- Filter toggle -->
+        <div v-for="cat in categoriesStore.categories" :key="cat.id" class="fchip-wrapper">
           <button
-            class="theme-btn filter-btn"
-            :class="{ active: filterStore.isFilterOpen || filterStore.category }"
-            @click="toggleFilter"
-            title="Filter by category"
+            class="fchip fchip-colored"
+            :class="{ 'fchip-active': filterStore.category === cat.id }"
+            :style="{ '--chip-color': cat.color }"
+            @click="filterStore.category = cat.id"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-            </svg>
-            <span v-if="filterStore.category" class="filter-dot"></span>
+            <span class="fchip-dot"></span>
+            {{ cat.name }}
           </button>
-
-          <!-- Dark mode toggle -->
-          <button 
-                @click="themeStore.toggle()" 
-                class="theme-btn" 
-                :title="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
-          >
-            <svg v-if="isDarkMode" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          </button>
+          <button class="fchip-del" @click.stop="deleteCategory(cat.id)" title="Delete category">×</button>
         </div>
+
+        <button class="fchip fchip-add" @click="openAddCategory" title="Add category">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="header-btns">
+        <!-- Search toggle -->
+        <button @click="toggleSearch" class="theme-btn" :class="{ active: isSearchOpen }" title="Search notes">
+          <svg v-if="!isSearchOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- Filter toggle -->
+        <button
+          class="theme-btn filter-btn"
+          :class="{ active: filterStore.isFilterOpen || filterStore.category }"
+          @click="toggleFilter"
+          title="Filter by category"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <span v-if="filterStore.category" class="filter-dot"></span>
+        </button>
+
+        <!-- Dark mode toggle -->
+        <button
+          @click="themeStore.toggle()"
+          class="theme-btn"
+          :title="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+        >
+          <svg v-if="isDarkMode" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
       </div>
     </div>
 
-    <!-- Filter / categories panel -->
-    <div v-if="filterStore.isFilterOpen" class="filter-panel">
-        <div class="filter-chips">
-          <button
-            class="fchip"
-            :class="{ 'fchip-active': !filterStore.category }"
-            @click="filterStore.category = null"
-          >All</button>
-
-          <div v-for="cat in categoriesStore.categories" :key="cat.id" class="fchip-wrapper">
-            <button
-              class="fchip fchip-colored"
-              :class="{ 'fchip-active': filterStore.category === cat.id }"
-              :style="{ '--chip-color': cat.color }"
-              @click="filterStore.category = cat.id"
-            >
-              <span class="fchip-dot"></span>
-              {{ cat.name }}
-            </button>
-            <button class="fchip-del" @click.stop="deleteCategory(cat.id)" title="Delete category">×</button>
-          </div>
-
-          <button class="fchip fchip-add" @click="openAddCategory" title="Add category">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Add category form -->
-        <div v-if="isAddingCategory" class="add-cat-form">
-          <input
-            ref="newCatNameRef"
-            v-model="newCatName"
-            class="add-cat-input"
-            placeholder="Category name"
-            @keydown.enter="confirmAddCategory"
-            @keydown.esc="cancelAddCategory"
-          />
-          <div class="add-cat-swatches">
-            <button
-              v-for="color in categoriesStore.CATEGORY_COLORS"
-              :key="color"
-              class="swatch"
-              :class="{ 'swatch-active': newCatColor === color }"
-              :style="{ background: color }"
-              @click="newCatColor = color"
-            ></button>
-          </div>
-          <div class="add-cat-actions">
-            <button class="btn-add-confirm" @click="confirmAddCategory" :disabled="!newCatName.trim()">Add</button>
-            <button class="btn-add-cancel" @click="cancelAddCategory">Cancel</button>
-          </div>
-        </div>
+    <!-- Add category form — shown below header-top only when needed -->
+    <div v-if="filterStore.isFilterOpen && isAddingCategory" class="add-cat-form">
+      <input
+        ref="newCatNameRef"
+        v-model="newCatName"
+        class="add-cat-input"
+        placeholder="Category name"
+        @keydown.enter="confirmAddCategory"
+        @keydown.esc="cancelAddCategory"
+      />
+      <div class="add-cat-swatches">
+        <button
+          v-for="color in categoriesStore.CATEGORY_COLORS"
+          :key="color"
+          class="swatch"
+          :class="{ 'swatch-active': newCatColor === color }"
+          :style="{ background: color }"
+          @click="newCatColor = color"
+        ></button>
+      </div>
+      <div class="add-cat-actions">
+        <button class="btn-add-confirm" @click="confirmAddCategory" :disabled="!newCatName.trim()">Add</button>
+        <button class="btn-add-cancel" @click="cancelAddCategory">Cancel</button>
+      </div>
     </div>
-
+  </div>
 </template>
 
 <style scoped>
+/* ===== TITLE ===== */
+.notes-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.dark .notes-title {
+  color: #eaeaea;
+}
+
 /* ===== HEADER ===== */
 .notes-header {
   display: flex;
@@ -249,19 +258,21 @@ const confirmAddCategory = () => {
 }
 
 
-/* ===== FILTER PANEL ===== */
-.filter-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding-bottom: 0.2rem;
-}
-
+/* ===== FILTER CHIPS (inline in header-top) ===== */
 .filter-chips {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex-wrap: nowrap;
+}
+
+.filter-chips::-webkit-scrollbar {
+  display: none;
 }
 
 .fchip-wrapper {
@@ -439,6 +450,12 @@ const confirmAddCategory = () => {
   padding: 0 0.65rem;
   height: 36px;
   min-width: 0;
+}
+
+/* when chips are also inline, give search a compact fixed width */
+.header-top:has(.filter-chips) .search-inline-wrapper {
+  flex: 0 0 auto;
+  width: 140px;
 }
 
 .dark .search-inline-wrapper {
@@ -633,5 +650,32 @@ const confirmAddCategory = () => {
 
 .dark .btn-add-cancel:hover {
   background: #1a2a4a;
+}
+
+/* ===== DESKTOP (≥1024px) ===== */
+@media (min-width: 1024px) {
+  .notes-header {
+    padding: 0.4rem calc(50% - 380px);
+  }
+}
+
+/* ===== TABLET (768px–1023px) ===== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .notes-header {
+    padding: 0.4rem 2rem;
+  }
+}
+
+/* ===== LANDSCAPE MOBILE (altezza ridotta) ===== */
+@media (max-height: 480px) and (orientation: landscape) {
+  .notes-header {
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+    gap: 0.15rem;
+  }
+
+  .header-top {
+    min-height: 36px;
+  }
 }
 </style>
