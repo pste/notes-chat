@@ -203,7 +203,7 @@ const toggleNoteCategory = (catId) => {
           <textarea
               ref="writeNoteRef"
               v-model="writingNote.content"
-              placeholder="Type a note... (Press Ctrl+Enter to send)"
+              placeholder="(Press Ctrl+Enter to send)"
               class="note-input"
               :rows="1"
               @keydown.meta.enter="sendNote"
