@@ -1,5 +1,9 @@
 # CHANGES
 
+## a14f02b — always show category chips in header, remove filter toggle
+
+I chip delle categorie e il filtro "All" sono ora sempre visibili nell'header, senza necessità di premere un pulsante per mostrarli. Rimosso il pulsante filtro (icona imbuto), lo stato `isFilterOpen`, e la logica click-outside correlata. Il pulsante `+` apre/chiude il form di aggiunta categoria direttamente. Fix del bug che impediva la creazione di nuove categorie (il click-outside cercava `.filter-panel` che non esisteva più nel DOM).
+
 ## 7969a32 — new icon: dark purple brain-balloon, update theme color
 
 Sostituisce il logo verde (chat balloon semplice) con un brain-balloon viola scuro.
