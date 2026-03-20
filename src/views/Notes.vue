@@ -44,11 +44,6 @@ const handleClickOutside = (event) => {
       isEmojiKeyboardOpen.value = false
     }
   }
-  if (filterStore.isFilterOpen) {
-    if (!event.target.closest('.filter-panel') && !event.target.closest('.filter-btn')) {
-      filterStore.isFilterOpen = false
-    }
-  }
 }
 
 onUnmounted(() => {

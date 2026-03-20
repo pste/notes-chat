@@ -8,6 +8,7 @@ const themeStore = useThemeStore()
 const categoriesStore = useCategoriesStore()
 const filterStore = useFilterStore()
 
+
 const isSearchOpen = ref(false)
 const searchInputRef = ref(null)
 const isDarkMode = computed(() => themeStore.theme  === "dark")
@@ -37,19 +38,14 @@ const deleteCategory = (id) => {
   categoriesStore.delete(id)
 }
 
-// filter panel
-const toggleFilter = () => {
-  filterStore.isFilterOpen = !filterStore.isFilterOpen
-  if (!filterStore.isFilterOpen) {
-    isAddingCategory.value = false
-    newCatName.value = ''
-    newCatColor.value = categoriesStore.CATEGORY_COLORS[0]
-  }
-}
-
 const openAddCategory = () => {
-  isAddingCategory.value = true
-  nextTick(() => newCatNameRef.value?.focus())
+  if (isAddingCategory.value === true) {
+    cancelAddCategory()
+  }
+  else {
+    isAddingCategory.value = true
+    nextTick(() => newCatNameRef.value?.focus())
+  }
 }
 
 const cancelAddCategory = () => {
@@ -92,7 +88,7 @@ const confirmAddCategory = () => {
       </div>
 
       <!-- Filter chips inline -->
-      <div v-if="filterStore.isFilterOpen" class="filter-chips">
+      <div class="filter-chips">
         <button
           class="fchip"
           :class="{ 'fchip-active': !filterStore.category }"
@@ -133,19 +129,6 @@ const confirmAddCategory = () => {
           </svg>
         </button>
 
-        <!-- Filter toggle -->
-        <button
-          class="theme-btn filter-btn"
-          :class="{ active: filterStore.isFilterOpen || filterStore.category }"
-          @click="toggleFilter"
-          title="Filter by category"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-          </svg>
-          <span v-if="filterStore.category" class="filter-dot"></span>
-        </button>
-
         <!-- Dark mode toggle -->
         <button
           @click="themeStore.toggle()"
@@ -171,7 +154,7 @@ const confirmAddCategory = () => {
     </div>
 
     <!-- Add category form — shown below header-top only when needed -->
-    <div v-if="filterStore.isFilterOpen && isAddingCategory" class="add-cat-form">
+    <div v-if="isAddingCategory" class="add-cat-form">
       <input
         ref="newCatNameRef"
         v-model="newCatName"
@@ -240,23 +223,6 @@ const confirmAddCategory = () => {
   flex-shrink: 0;
   margin-left: auto;
 }
-
-/* Filter active dot */
-.filter-dot {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #4caf50;
-  border: 1.5px solid #eef1f6;
-}
-
-.dark .filter-dot {
-  border-color: #0f3460;
-}
-
 
 /* ===== FILTER CHIPS (inline in header-top) ===== */
 .filter-chips {
