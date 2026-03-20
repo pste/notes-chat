@@ -1,40 +1,32 @@
+import { defineStore } from 'pinia'
+import useLocalStorage from '../composables/localStorage'
 const NOTES_KEY = 'notes_chat_notes'
 
-// Generate a unique ID for notes
-function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).substring(2)
-}
+export const useNotesStore = defineStore('notes', () => {
+  // ref
+  const notes = useLocalStorage(NOTES_KEY, [])
 
-// Get all notes from localStorage
-function getAllNotes() {
-  const data = localStorage.getItem(NOTES_KEY)
-  if (!data) return []
-  try {
-    const notes = JSON.parse(data)
-    // Migrate old single categoryId → categoryIds array
-    return notes.map(n => {
-      if (!n.categoryIds) {
-        return { ...n, categoryIds: n.categoryId ? [n.categoryId] : [] }
-      }
-      return n
-    })
-  } catch {
-    return []
+  // Generate a unique ID for notes
+  function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substring(2)
   }
-}
 
-// Save notes to localStorage
-function saveNotes(notes) {
-  localStorage.setItem(NOTES_KEY, JSON.stringify(notes))
-}
+  // Get all notes from localStorage
+  function getAllNotes() {
+    try {
+      // Migrate old single categoryId → categoryIds array
+      return notes.value.map(n => {
+        if (!n.categoryIds) {
+          return { ...n, categoryIds: n.categoryId ? [n.categoryId] : [] }
+        }
+        return n
+      })
+    } catch {
+      return []
+    }
+  }
 
-export const notesStore = {
-  getAll() {
-    return getAllNotes()
-  },
-
-  add(content, categoryIds = []) {
-    const notes = getAllNotes()
+  function add(content, categoryIds = []) {
     const note = {
       id: generateId(),
       content,
@@ -42,35 +34,40 @@ export const notesStore = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
-    notes.unshift(note)
-    saveNotes(notes)
+    //notes.unshift(note)
+    notes.value.push(note)
     return note
-  },
+  }
 
-  update(id, content, categoryIds = []) {
-    const notes = getAllNotes()
-    const index = notes.findIndex(n => n.id === id)
+  function update(id, content, categoryIds = []) {
+    const index = notes.value.findIndex(n => n.id === id)
     if (index === -1) return null
 
-    notes[index] = {
-      ...notes[index],
+    notes.value[index] = {
+      ...notes.value[index],
       content,
       categoryIds,
       updatedAt: new Date().toISOString()
     }
-    saveNotes(notes)
-    return notes[index]
-  },
-
-  delete(id) {
-    const notes = getAllNotes()
-    const filtered = notes.filter(n => n.id !== id)
-    saveNotes(filtered)
-    return filtered
-  },
-
-  getById(id) {
-    const notes = getAllNotes()
-    return notes.find(n => n.id === id) || null
+    return notes.value[index]
   }
-}
+
+  function deleteNote(id) {
+    const filtered = notes.value.filter(n => n.id !== id)
+    notes.value = filtered
+    return filtered
+  }
+
+  function getById(id) {
+    return notes.value.find(n => n.id === id) || null
+  }
+
+  // 
+  return {
+    getAll: getAllNotes,
+    getById,
+    add,
+    update,
+    delete: deleteNote,
+  }
+})
