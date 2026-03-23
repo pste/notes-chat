@@ -1,5 +1,9 @@
 # CHANGES
 
+## 683fbd2 — fix category deselect, soften chip hover, fix long text wrapping
+
+Tre fix in un colpo solo: (1) cliccando su una categoria già attiva il filtro si azzera (toggle), risolve la regressione introdotta rimuovendo il chip "All"; (2) hover sui chip categorie più leggero in light e dark mode (contrasto ridotto); (3) aggiunto `overflow-wrap: break-word` + `word-break: break-word` su `.note-text` per gestire URL lunghi e stringhe senza spazi.
+
 ## 6461725 — remove All filter chip, add two-click confirm for category delete
 
 Rimosso il chip "All" dall'header: era ridondante (cliccando fuori da qualsiasi categoria il filtro si resetta comunque). Aggiunta protezione dall'eliminazione accidentale delle categorie: il bottone `×` ora richiede un secondo click per confermare — al primo diventa rosso con `?`, al secondo esegue l'eliminazione. Cliccando su un altro chip si annulla l'azione.
