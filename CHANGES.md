@@ -1,5 +1,9 @@
 # CHANGES
 
+## 8add3b6 — extract shared chip styles to global CSS
+
+Rimosso ~90 righe di CSS duplicato tra `Header.vue`, `Notes.vue` e `Note.vue`. Introdotte quattro classi globali in `style.css`: `.chip` (base chip), `.chip-fill` (variante con background, usata nell'header), `.chip-active` (stato attivo colorato via `--chip-color`), `.chip-dot` (pallino colorato). Le classi locali `fchip`, `cat-select-chip`, `inline-cat-chip` e relative varianti sono state rimosse e sostituite dalle globali.
+
 ## 50d21d3 — soften category chip hover in new message area to match header
 
 Allineato il colore hover dei chip categoria nell'area "nuovo messaggio" a quello dell'header: `#d5dbe6` in light mode, `#192847` in dark mode.
