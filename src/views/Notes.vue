@@ -183,12 +183,12 @@ const toggleNoteCategory = (catId) => {
         <button
           v-for="cat in categoriesStore.categories"
           :key="cat.id"
-          class="cat-select-chip"
-          :class="{ 'cat-select-active': writingNote.categoryIds.includes(cat.id) }"
+          class="chip"
+          :class="{ 'chip-active': writingNote.categoryIds.includes(cat.id) }"
           :style="{ '--chip-color': cat.color }"
           @click="toggleNoteCategory(cat.id)"
         >
-          <span class="cat-chip-dot"></span>
+          <span class="chip-dot"></span>
           {{ cat.name }}
         </button>
       </div>
@@ -322,54 +322,6 @@ const toggleNoteCategory = (catId) => {
 
 .category-selector::-webkit-scrollbar {
   display: none;
-}
-
-.cat-select-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: 12px;
-  border: 1px solid #c2cad6;
-  background: transparent;
-  color: #666;
-  font-size: 0.75rem;
-  font-family: inherit;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s;
-  line-height: 1.4;
-}
-
-.cat-select-chip:hover {
-  background: #d5dbe6;
-}
-
-.cat-chip-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--chip-color);
-  flex-shrink: 0;
-}
-
-.cat-select-active {
-  background: var(--chip-color);
-  border-color: var(--chip-color);
-  color: white;
-}
-
-.cat-select-active .cat-chip-dot {
-  background: rgba(255, 255, 255, 0.7);
-}
-
-.dark .cat-select-chip {
-  border-color: #1a2a4a;
-  color: #888;
-}
-
-.dark .cat-select-chip:hover {
-  background: #192847;
 }
 
 /* ===== INPUT ROW ===== */

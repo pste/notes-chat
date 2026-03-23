@@ -85,12 +85,12 @@ const formatTime = (date) => {
           <button
             v-for="cat in allCategories"
             :key="cat.id"
-            class="inline-cat-chip"
-            :class="{ 'inline-cat-active': editCategoryIds.includes(cat.id) }"
+            class="chip"
+            :class="{ 'chip-active': editCategoryIds.includes(cat.id) }"
             :style="{ '--chip-color': cat.color }"
             @click="toggleEditCategory(cat.id)"
           >
-            <span class="cat-chip-dot"></span>
+            <span class="chip-dot"></span>
             {{ cat.name }}
           </button>
         </div>
@@ -300,54 +300,6 @@ const formatTime = (date) => {
   flex-wrap: wrap;
   gap: 0.3rem;
   margin-bottom: 0.6rem;
-}
-
-.inline-cat-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.18rem 0.5rem;
-  border-radius: 12px;
-  border: 1px solid #c2cad6;
-  background: transparent;
-  color: #666;
-  font-size: 0.73rem;
-  font-family: inherit;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s;
-  line-height: 1.4;
-}
-
-.inline-cat-chip:hover {
-  background: #dde3ec;
-}
-
-.cat-chip-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--chip-color);
-  flex-shrink: 0;
-}
-
-.inline-cat-active {
-  background: var(--chip-color);
-  border-color: var(--chip-color);
-  color: white;
-}
-
-.inline-cat-active .cat-chip-dot {
-  background: rgba(255, 255, 255, 0.7);
-}
-
-.dark .inline-cat-chip {
-  border-color: #1a2a4a;
-  color: #888;
-}
-
-.dark .inline-cat-chip:hover {
-  background: #16213e;
 }
 
 .inline-edit-actions {

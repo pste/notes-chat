@@ -102,12 +102,12 @@ const confirmAddCategory = () => {
       <div class="filter-chips" @click.self="cancelPendingDelete">
         <div v-for="cat in categoriesStore.categories" :key="cat.id" class="fchip-wrapper">
           <button
-            class="fchip fchip-colored"
-            :class="{ 'fchip-active': filterStore.category === cat.id }"
+            class="chip chip-fill"
+            :class="{ 'chip-active': filterStore.category === cat.id }"
             :style="{ '--chip-color': cat.color }"
             @click="filterStore.category = filterStore.category === cat.id ? null : cat.id; cancelPendingDelete()"
           >
-            <span class="fchip-dot"></span>
+            <span class="chip-dot"></span>
             {{ cat.name }}
           </button>
           <button
@@ -118,7 +118,7 @@ const confirmAddCategory = () => {
           >{{ pendingDelete === cat.id ? '?' : '×' }}</button>
         </div>
 
-        <button class="fchip fchip-add" @click="openAddCategory" title="Add category">
+        <button class="chip chip-fill chip-add" @click="openAddCategory" title="Add category">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -256,77 +256,6 @@ const confirmAddCategory = () => {
   align-items: center;
 }
 
-.fchip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.22rem 0.6rem;
-  border-radius: 20px;
-  border: 1px solid #c2cad6;
-  background: #dde3ec;
-  color: #555;
-  font-size: 0.76rem;
-  font-family: inherit;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color 0.15s, color 0.15s;
-  line-height: 1.4;
-}
-
-.fchip:hover {
-  background: #d5dbe6;
-}
-
-.fchip:focus-visible {
-  outline: 2px solid #4caf50;
-  outline-offset: 2px;
-}
-
-.dark .fchip {
-  background: #16213e;
-  border-color: #1a2a4a;
-  color: #aaa;
-}
-
-.dark .fchip:hover {
-  background: #192847;
-}
-
-.fchip-active {
-  background: #4caf50;
-  border-color: #4caf50;
-  color: white;
-}
-
-.fchip-active:hover {
-  background: #43a047;
-}
-
-.dark .fchip-active,
-.dark .fchip-active:hover {
-  background: #4caf50;
-  border-color: #4caf50;
-  color: white;
-}
-
-.fchip-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--chip-color);
-  flex-shrink: 0;
-}
-
-.fchip-colored.fchip-active {
-  background: var(--chip-color);
-  border-color: var(--chip-color);
-  color: white;
-}
-
-.fchip-colored.fchip-active .fchip-dot {
-  background: rgba(255, 255, 255, 0.7);
-}
-
 .fchip-del {
   width: 15px;
   height: 15px;
@@ -371,7 +300,7 @@ const confirmAddCategory = () => {
   }
 }
 
-.fchip-add {
+.chip-add {
   padding: 0.22rem 0.45rem;
   min-width: 28px;
   justify-content: center;
