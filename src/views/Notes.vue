@@ -342,7 +342,7 @@ const toggleNoteCategory = (catId) => {
 }
 
 .cat-select-chip:hover {
-  background: #dde3ec;
+  background: #d5dbe6;
 }
 
 .cat-chip-dot {
@@ -369,7 +369,7 @@ const toggleNoteCategory = (catId) => {
 }
 
 .dark .cat-select-chip:hover {
-  background: #16213e;
+  background: #192847;
 }
 
 /* ===== INPUT ROW ===== */
