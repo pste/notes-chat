@@ -33,9 +33,20 @@ const toggleSearch = () => {
 }
 
 // category management
+const pendingDelete = ref(null)
+
 const deleteCategory = (id) => {
-  if (filterStore.category === id) filterStore.category = null
-  categoriesStore.delete(id)
+  if (pendingDelete.value === id) {
+    if (filterStore.category === id) filterStore.category = null
+    categoriesStore.delete(id)
+    pendingDelete.value = null
+  } else {
+    pendingDelete.value = id
+  }
+}
+
+const cancelPendingDelete = () => {
+  pendingDelete.value = null
 }
 
 const openAddCategory = () => {
@@ -88,24 +99,23 @@ const confirmAddCategory = () => {
       </div>
 
       <!-- Filter chips inline -->
-      <div class="filter-chips">
-        <button
-          class="fchip"
-          :class="{ 'fchip-active': !filterStore.category }"
-          @click="filterStore.category = null"
-        >All</button>
-
+      <div class="filter-chips" @click.self="cancelPendingDelete">
         <div v-for="cat in categoriesStore.categories" :key="cat.id" class="fchip-wrapper">
           <button
             class="fchip fchip-colored"
             :class="{ 'fchip-active': filterStore.category === cat.id }"
             :style="{ '--chip-color': cat.color }"
-            @click="filterStore.category = cat.id"
+            @click="filterStore.category = cat.id; cancelPendingDelete()"
           >
             <span class="fchip-dot"></span>
             {{ cat.name }}
           </button>
-          <button class="fchip-del" @click.stop="deleteCategory(cat.id)" title="Delete category">×</button>
+          <button
+            class="fchip-del"
+            :class="{ 'fchip-del-confirm': pendingDelete === cat.id }"
+            @click.stop="deleteCategory(cat.id)"
+            :title="pendingDelete === cat.id ? 'Confirm delete' : 'Delete category'"
+          >{{ pendingDelete === cat.id ? '?' : '×' }}</button>
         </div>
 
         <button class="fchip fchip-add" @click="openAddCategory" title="Add category">
@@ -343,6 +353,16 @@ const confirmAddCategory = () => {
 
 .fchip-del:hover {
   background: #d32f2f;
+}
+
+.fchip-del-confirm {
+  opacity: 1;
+  background: #d32f2f;
+  color: white;
+}
+
+.fchip-del-confirm:hover {
+  background: #b71c1c;
 }
 
 @media (hover: none) {
