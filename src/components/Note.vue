@@ -194,6 +194,8 @@ const formatTime = (date) => {
   line-height: 1.6;
   color: #333;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .dark .note-text {

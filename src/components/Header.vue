@@ -105,7 +105,7 @@ const confirmAddCategory = () => {
             class="fchip fchip-colored"
             :class="{ 'fchip-active': filterStore.category === cat.id }"
             :style="{ '--chip-color': cat.color }"
-            @click="filterStore.category = cat.id; cancelPendingDelete()"
+            @click="filterStore.category = filterStore.category === cat.id ? null : cat.id; cancelPendingDelete()"
           >
             <span class="fchip-dot"></span>
             {{ cat.name }}
@@ -274,7 +274,7 @@ const confirmAddCategory = () => {
 }
 
 .fchip:hover {
-  background: #cdd5e0;
+  background: #d5dbe6;
 }
 
 .fchip:focus-visible {
@@ -289,7 +289,7 @@ const confirmAddCategory = () => {
 }
 
 .dark .fchip:hover {
-  background: #1e2d52;
+  background: #192847;
 }
 
 .fchip-active {
