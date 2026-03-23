@@ -1,5 +1,9 @@
 # CHANGES
 
+## 6461725 — remove All filter chip, add two-click confirm for category delete
+
+Rimosso il chip "All" dall'header: era ridondante (cliccando fuori da qualsiasi categoria il filtro si resetta comunque). Aggiunta protezione dall'eliminazione accidentale delle categorie: il bottone `×` ora richiede un secondo click per confermare — al primo diventa rosso con `?`, al secondo esegue l'eliminazione. Cliccando su un altro chip si annulla l'azione.
+
 ## a940c6e — update PWA icons from notes-chat-1.png, change theme color to #6502e7
 
 Sostituisce le icone PWA con quelle derivate da `public/notes-chat-1.png` (cervello su carta a righe). Il colore viola scuro originale `#1e0f2f` è stato sostituito con `#6502e7` prima del resize. Aggiornati `theme_color` e `background_color` nel manifest da `#581C87` a `#6502e7`.
