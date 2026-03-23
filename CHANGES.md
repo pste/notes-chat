@@ -1,5 +1,9 @@
 # CHANGES
 
+## 50d21d3 — soften category chip hover in new message area to match header
+
+Allineato il colore hover dei chip categoria nell'area "nuovo messaggio" a quello dell'header: `#d5dbe6` in light mode, `#192847` in dark mode.
+
 ## 683fbd2 — fix category deselect, soften chip hover, fix long text wrapping
 
 Tre fix in un colpo solo: (1) cliccando su una categoria già attiva il filtro si azzera (toggle), risolve la regressione introdotta rimuovendo il chip "All"; (2) hover sui chip categorie più leggero in light e dark mode (contrasto ridotto); (3) aggiunto `overflow-wrap: break-word` + `word-break: break-word` su `.note-text` per gestire URL lunghi e stringhe senza spazi.
