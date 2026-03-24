@@ -56,6 +56,7 @@ onUnmounted(() => {
 
 function selectEmoji(emoji) {
   emit('select-emoji', { emoji })
+  emit('update:isKeyboardOpen', false)
 }
 
 function closeKeyboard() {

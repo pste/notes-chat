@@ -165,6 +165,7 @@ const toggleNoteCategory = (catId) => {
             @edit-note="editNote"
             @save-note="handleSaveNote"
             @cancel-edit="handleCancelEdit"
+            @open-emoji-picker="isEmojiKeyboardOpen = true"
         />
       </div>
     </div>

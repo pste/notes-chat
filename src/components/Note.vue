@@ -10,7 +10,7 @@ const props = defineProps({
     allCategories: { type: Array, default: () => [] },
 })
 
-const emit = defineEmits(['edit-note', 'delete-note', 'save-note', 'cancel-edit'])
+const emit = defineEmits(['edit-note', 'delete-note', 'save-note', 'cancel-edit', 'open-emoji-picker'])
 
 const editContent = ref('')
 const editCategoryIds = ref([])
@@ -110,6 +110,7 @@ const formatTime = (date) => {
         </div>
 
         <div class="inline-edit-actions">
+          <button class="inline-emoji-btn" @click.stop="emit('open-emoji-picker')" title="Add emoji">😊</button>
           <button class="inline-save-btn" @click="saveEdit" :disabled="!editContent.trim()">Save</button>
           <button class="inline-cancel-btn" @click="emit('cancel-edit', id)">Cancel</button>
         </div>
@@ -339,6 +340,27 @@ const formatTime = (date) => {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
+  align-items: center;
+}
+
+.inline-emoji-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.25rem 0.4rem;
+  border-radius: 6px;
+  line-height: 1;
+  margin-right: auto;
+  transition: background-color 0.15s;
+}
+
+.inline-emoji-btn:hover {
+  background-color: #e8edf3;
+}
+
+.dark .inline-emoji-btn:hover {
+  background-color: #0f3460;
 }
 
 .inline-save-btn {

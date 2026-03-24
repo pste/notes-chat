@@ -1,5 +1,9 @@
 # CHANGES
 
+## TBD — close emoji picker on selection, add emoji button in edit panel
+
+Il picker emoji si chiude automaticamente dopo la selezione di un emoji. Aggiunto bottone 😊 nel pannello di edit inline delle note per aprire il picker anche durante la modifica. Fix al `handleClickOutside` tramite `.stop` per evitare che il picker venisse subito richiuso al click del bottone di edit.
+
 ## e2d0593 — clickable links in notes
 
 URL `http://` e `https://` nel testo delle note vengono riconosciuti automaticamente e resi cliccabili come `<a target="_blank">`. Il testo normale rimane invariato. Stile: verde accent `#4caf50`, underline solo su hover, `#81c784` in dark mode.
