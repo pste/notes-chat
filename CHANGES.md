@@ -1,5 +1,9 @@
 # CHANGES
 
+## 40ae5e1 — allow filtering by multiple categories simultaneously
+
+`filterStore.category` (singolo valore) sostituito con `filterStore.categories` (array) e helper `toggleCategory(id)`. La logica di filtro in `Notes.vue` e `Header.vue` usa semantica OR: una nota è visibile se appartiene ad almeno una delle categorie selezionate. Aggiornato anche il messaggio empty-state.
+
 ## 168a573 — fix search result counter always showing 0
 
 La computed `filteredNotes` in `Header.vue` era uno stub che restituiva sempre `[]`. Importato `useNotesStore` e implementata la logica di filtraggio reale (per categoria e per testo), identica a quella già presente in `Notes.vue`.
