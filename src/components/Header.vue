@@ -3,11 +3,12 @@ import { ref, computed, nextTick } from 'vue'
 import { useCategoriesStore } from '../store/categories'
 import { useThemeStore } from '../store/theme'
 import { useFilterStore } from '../store/filter'
+import { useNotesStore } from '../store/notes'
 
 const themeStore = useThemeStore()
 const categoriesStore = useCategoriesStore()
 const filterStore = useFilterStore()
-
+const notesStore = useNotesStore()
 
 const isSearchOpen = ref(false)
 const searchInputRef = ref(null)
@@ -17,9 +18,14 @@ const newCatName = ref('')
 const newCatColor = ref(categoriesStore.CATEGORY_COLORS[0])
 const newCatNameRef = ref(null)
 
-//
 const filteredNotes = computed(() => {
-    return [] // TODO
+  let all = notesStore.getAll()
+  if (filterStore.category) {
+    all = all.filter(n => n.categoryIds?.includes(filterStore.category))
+  }
+  const q = filterStore.searchQuery.trim().toLowerCase()
+  if (!q) return all
+  return all.filter(n => n.content.toLowerCase().includes(q))
 })
 
 // search

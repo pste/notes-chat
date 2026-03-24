@@ -1,16 +1,16 @@
-# STATUS.md — aggiornato 2026-03-23
+# STATUS.md — aggiornato 2026-03-24
 
 ## Stato generale
 Fase: alpha interna. Core funzionante, non ancora pronto per utenti reali.
 
 ## Ultima sessione
-- rimosso chip "All" dai filtri header
-- aggiunta conferma a doppio click per eliminazione categorie
+- fix contatore risultati search (era sempre 0, computed in Header.vue era un TODO stub)
 
 ## Funziona ✅
 - CRUD sui messaggi
 - filtro messaggi
 - recupero messaggi da storage locale
+- contatore risultati search
 
 ## WIP 🔄
 - migliorare UI e grafica
@@ -18,14 +18,9 @@ Fase: alpha interna. Core funzionante, non ancora pronto per utenti reali.
 
 ## Da fare ❌
 - aggiunta allegati ai messaggi
-- gestione link esterni
-- aggiunta allegati ai messaggi
-- gestione link esterni
-
-## Decisioni prese oggi
-- Formattare meglio messaggi lunghi (ad es link)
+- gestione link esterni con formattazione differente e cliccabili
+- non mi piace il css hover delle categorie nel "nuovo messaggio", evidenziazione troppo evidente, soprattutto su tema scuro. Deve essere molto leggero.
+- permettere filtro per più categorie contemporaneamente
 
 ## Blocchi / dubbi aperti
 - la emoji keyboard non mi piace. verificare soluzioni simili a telegram o altra app
-
-## Prossima sessione
