@@ -1,6 +1,6 @@
 # CHANGES
 
-## [prossima] — clickable links in notes
+## e2d0593 — clickable links in notes
 
 URL `http://` e `https://` nel testo delle note vengono riconosciuti automaticamente e resi cliccabili come `<a target="_blank">`. Il testo normale rimane invariato. Stile: verde accent `#4caf50`, underline solo su hover, `#81c784` in dark mode.
 
