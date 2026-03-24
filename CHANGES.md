@@ -1,5 +1,9 @@
 # CHANGES
 
+## 168a573 — fix search result counter always showing 0
+
+La computed `filteredNotes` in `Header.vue` era uno stub che restituiva sempre `[]`. Importato `useNotesStore` e implementata la logica di filtraggio reale (per categoria e per testo), identica a quella già presente in `Notes.vue`.
+
 ## 8add3b6 — extract shared chip styles to global CSS
 
 Rimosso ~90 righe di CSS duplicato tra `Header.vue`, `Notes.vue` e `Note.vue`. Introdotte quattro classi globali in `style.css`: `.chip` (base chip), `.chip-fill` (variante con background, usata nell'header), `.chip-active` (stato attivo colorato via `--chip-color`), `.chip-dot` (pallino colorato). Le classi locali `fchip`, `cat-select-chip`, `inline-cat-chip` e relative varianti sono state rimosse e sostituite dalle globali.
