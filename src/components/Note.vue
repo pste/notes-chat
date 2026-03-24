@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, computed } from 'vue'
 
 const props = defineProps({
     id: String,
@@ -55,6 +55,20 @@ const saveEdit = () => {
   emit('save-note', { id: props.id, content: editContent.value.trim(), categoryIds: editCategoryIds.value })
 }
 
+const URL_RE = /https?:\/\/[^\s<>"]+/g
+
+const parsedContent = computed(() => {
+  const segments = []
+  let last = 0
+  for (const m of props.content.matchAll(URL_RE)) {
+    if (m.index > last) segments.push({ type: 'text', value: props.content.slice(last, m.index) })
+    segments.push({ type: 'url', value: m[0] })
+    last = m.index + m[0].length
+  }
+  if (last < props.content.length) segments.push({ type: 'text', value: props.content.slice(last) })
+  return segments
+})
+
 const formatTime = (date) => {
   return date.toLocaleString('en-US', {
     month: 'short',
@@ -109,7 +123,12 @@ const formatTime = (date) => {
             <span class="cat-name">{{ cat.name }}</span>
           </span>
         </div>
-        <p class="note-text">{{ content }}</p>
+        <p class="note-text">
+          <template v-for="(seg, i) in parsedContent" :key="i">
+            <a v-if="seg.type === 'url'" :href="seg.value" target="_blank" rel="noopener noreferrer" class="note-link">{{ seg.value }}</a>
+            <span v-else>{{ seg.value }}</span>
+          </template>
+        </p>
         <div class="note-meta">
           <span class="note-time">{{ formatTime(createdAt) }}</span>
           <div class="note-actions">
@@ -200,6 +219,20 @@ const formatTime = (date) => {
 
 .dark .note-text {
   color: #eaeaea;
+}
+
+.note-link {
+  color: #4caf50;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.note-link:hover {
+  text-decoration: underline;
+}
+
+.dark .note-link {
+  color: #81c784;
 }
 
 .note-meta {

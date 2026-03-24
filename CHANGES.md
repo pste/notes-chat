@@ -1,5 +1,9 @@
 # CHANGES
 
+## [prossima] — clickable links in notes
+
+URL `http://` e `https://` nel testo delle note vengono riconosciuti automaticamente e resi cliccabili come `<a target="_blank">`. Il testo normale rimane invariato. Stile: verde accent `#4caf50`, underline solo su hover, `#81c784` in dark mode.
+
 ## 40ae5e1 — allow filtering by multiple categories simultaneously
 
 `filterStore.category` (singolo valore) sostituito con `filterStore.categories` (array) e helper `toggleCategory(id)`. La logica di filtro in `Notes.vue` e `Header.vue` usa semantica OR: una nota è visibile se appartiene ad almeno una delle categorie selezionate. Aggiornato anche il messaggio empty-state.
