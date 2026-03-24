@@ -51,6 +51,22 @@ export default defineConfig({
             type: 'image/png',
             purpose: 'maskable'
           }
+        ],
+        screenshots: [
+          {
+            src: "notes-chat-screen-1.png",
+            sizes: "1080x1920",
+            type: "image/png",
+            form_factor: "narrow",
+            label: "Interfaccia Mobile"
+          },
+          {
+            src: "notes-chat-screen-1.png",
+            sizes: "1920x1080",
+            type: "image/png",
+            form_factor: "wide",
+            label: "Interfaccia Desktop"
+          }
         ]
       }
     })
