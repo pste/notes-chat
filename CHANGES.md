@@ -1,6 +1,6 @@
 # CHANGES
 
-## TBD — close emoji picker on selection, add emoji button in edit panel
+## 5553860 — close emoji picker on selection, add emoji button in edit panel
 
 Il picker emoji si chiude automaticamente dopo la selezione di un emoji. Aggiunto bottone 😊 nel pannello di edit inline delle note per aprire il picker anche durante la modifica. Fix al `handleClickOutside` tramite `.stop` per evitare che il picker venisse subito richiuso al click del bottone di edit.
 
