@@ -20,8 +20,8 @@ const newCatNameRef = ref(null)
 
 const filteredNotes = computed(() => {
   let all = notesStore.getAll()
-  if (filterStore.category) {
-    all = all.filter(n => n.categoryIds?.includes(filterStore.category))
+  if (filterStore.categories.length) {
+    all = all.filter(n => filterStore.categories.some(c => n.categoryIds?.includes(c)))
   }
   const q = filterStore.searchQuery.trim().toLowerCase()
   if (!q) return all
@@ -43,7 +43,8 @@ const pendingDelete = ref(null)
 
 const deleteCategory = (id) => {
   if (pendingDelete.value === id) {
-    if (filterStore.category === id) filterStore.category = null
+    const idx = filterStore.categories.indexOf(id)
+    if (idx !== -1) filterStore.categories.splice(idx, 1)
     categoriesStore.delete(id)
     pendingDelete.value = null
   } else {
@@ -109,9 +110,9 @@ const confirmAddCategory = () => {
         <div v-for="cat in categoriesStore.categories" :key="cat.id" class="fchip-wrapper">
           <button
             class="chip chip-fill"
-            :class="{ 'chip-active': filterStore.category === cat.id }"
+            :class="{ 'chip-active': filterStore.categories.includes(cat.id) }"
             :style="{ '--chip-color': cat.color }"
-            @click="filterStore.category = filterStore.category === cat.id ? null : cat.id; cancelPendingDelete()"
+            @click="filterStore.toggleCategory(cat.id); cancelPendingDelete()"
           >
             <span class="chip-dot"></span>
             {{ cat.name }}

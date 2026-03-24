@@ -24,8 +24,8 @@ const editingNoteId = ref(null)
 // computed
 const filteredNotes = computed(() => {
   let all = notes.value
-  if (filterStore.category) {
-    all = all.filter(n => n.categoryIds?.includes(filterStore.category))
+  if (filterStore.categories.length) {
+    all = all.filter(n => filterStore.categories.some(c => n.categoryIds?.includes(c)))
   }
   const q = filterStore.searchQuery.trim().toLowerCase()
   if (!q) return all
@@ -148,7 +148,7 @@ const toggleNoteCategory = (catId) => {
     <div class="notes-container" ref="notesContainerRef">
       <div v-if="filteredNotes.length === 0" class="empty-state">
         <p class="empty-message">
-          {{ filterStore.searchQuery ? 'No notes match your search.' : filterStore.category ? 'No notes in this category.' : 'No notes yet. Start the conversation!' }}
+          {{ filterStore.searchQuery ? 'No notes match your search.' : filterStore.categories.length ? 'No notes in the selected categories.' : 'No notes yet. Start the conversation!' }}
         </p>
       </div>
 

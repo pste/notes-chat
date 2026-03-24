@@ -4,11 +4,11 @@
 Fase: alpha interna. Core funzionante, non ancora pronto per utenti reali.
 
 ## Ultima sessione
-- fix contatore risultati search (era sempre 0, computed in Header.vue era un TODO stub)
+- filtro per più categorie contemporaneamente (OR semantics)
 
 ## Funziona ✅
 - CRUD sui messaggi
-- filtro messaggi
+- filtro messaggi (multi-categoria + ricerca testo)
 - recupero messaggi da storage locale
 - contatore risultati search
 
@@ -20,7 +20,6 @@ Fase: alpha interna. Core funzionante, non ancora pronto per utenti reali.
 - aggiunta allegati ai messaggi
 - gestione link esterni con formattazione differente e cliccabili
 - non mi piace il css hover delle categorie nel "nuovo messaggio", evidenziazione troppo evidente, soprattutto su tema scuro. Deve essere molto leggero.
-- permettere filtro per più categorie contemporaneamente
 
 ## Blocchi / dubbi aperti
 - la emoji keyboard non mi piace. verificare soluzioni simili a telegram o altra app
